@@ -23,7 +23,7 @@ local function OnTrigger()
         "OnMouseDown",
         function(self, button, ctrl, alt, shift)
             d("clicked")
-            window.SetHidden(true)
+            layout.element.SetHidden(true)
         end
     )
 end
