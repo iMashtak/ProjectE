@@ -1,12 +1,11 @@
 ---@class Ref<T>
 ---@field use fun(self: Ref<T>, id: string, hook: fun(old: T, new: T))
 ---@field set fun(self: Ref<T>, v: T)
-Ref = {}
 
 ---@generic T
 ---@param init T
 ---@return Ref<T>
-function NewRef(init)
+function Ref(init)
     local value = init
     local hooks = {}
     local self = {}
@@ -27,6 +26,5 @@ function NewRef(init)
         value = v
     end
 
-    setmetatable(self, Ref)
     return self
 end

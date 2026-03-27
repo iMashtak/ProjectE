@@ -4,8 +4,8 @@
 local function OnTrigger()
     d("triggered")
     local layout = Controls.layout("E_WINDOW", {
-        hidden = NewRef(false),
-        dimensions = NewRef({x = 100, y = 100})
+        hidden = Ref(false),
+        dimensions = Ref({x = 100, y = 100})
     })
     layout.element:ClearAnchors()
     layout.element:SetAnchor(CENTER, GuiRoot, CENTER, 0, 0)

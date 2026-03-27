@@ -13,14 +13,14 @@ function Controls.layout(id, args)
     local window = WINDOW_MANAGER:CreateTopLevelWindow(id)
 
     if args.hidden == nil then
-        args.hidden = NewRef(true)
+        args.hidden = Ref(true)
     end
     args.hidden:use(id .. "-hidden", function(_, new)
         window:SetHidden(new)
     end)
 
     if args.dimensions == nil then
-        args.dimensions = NewRef({ x = 0, y = 0 })
+        args.dimensions = Ref({ x = 0, y = 0 })
     end
     args.dimensions:use(id .. "-dimensions", function(_, new)
         window:SetDimensions(new.x, new.y)
