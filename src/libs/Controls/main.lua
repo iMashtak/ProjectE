@@ -3,14 +3,23 @@ Controls = {}
 ---@class Element
 ---@field element any
 
-d = d
+---@alias AnchorSetting {point: any, target: any, relativePoint: any, offsetX: integer, offsetY: integer}
 
-WINDOW_MANAGER = WINDOW_MANAGER
-EVENT_MANAGER = EVENT_MANAGER
-SLASH_COMMANDS = SLASH_COMMANDS
+---@alias OnMouseDownFun fun(self, button, ctrl, alt, shift, command)
 
-GuiRoot = GuiRoot
-CENTER = CENTER
-CT_TEXTURE = CT_TEXTURE
+Fonts = {
+    game = "ZoFontGame",
+}
 
-EVENT_ADD_ON_LOADED = EVENT_ADD_ON_LOADED
+---@param target Element
+---@param style string
+---@return AnchorSetting[]
+function AnchorStyle(target, style)
+    if style == "fill" then
+        return {
+            { point = TOPLEFT,     target = target.element, relativePoint = TOPLEFT, offsetX = 0, offsetY = 0 },
+            { point = BOTTOMRIGHT, target = target.element, relativePoint = RIGHT,   offsetX = 0, offsetY = 0 },
+        }
+    end
+    return {}
+end

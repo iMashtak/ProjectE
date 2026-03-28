@@ -4,7 +4,8 @@
 ## Version: 1.0.0
 ## APIVersion: 101049
 
-src/libs/Controls/main.lua
-src/libs/Controls/ref.lua
-src/libs/Controls/layout.lua
-src/tests/ControlsSample/test.lua
+src\libs\Controls\main.lua
+src\libs\Controls\ref.lua
+src\libs\Controls\label.lua
+src\libs\Controls\layout.lua
+src\tests\ControlsSample\test.lua

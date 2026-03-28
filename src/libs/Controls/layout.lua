@@ -3,32 +3,52 @@
 
 ---@class Layout : Element
 ---@field hidden Ref<boolean>
----@field dimensions Ref<{x: integer, y: integer}>
+---@field height Ref<integer>
+---@field width Ref<integer>
+---@field anchors Ref<AnchorSetting[]>
 
 ---@param id string
----@param args {hidden: Ref<boolean>?, dimensions: Ref<{x: integer, y: integer}>?}
+---@param args {hidden: Ref<boolean>?, height: Ref<integer>?, width: Ref<integer>?, anchors: Ref<AnchorSetting[]>?}
 ---@return Layout
 ---@nodiscard
 function Controls.layout(id, args)
-    local window = WINDOW_MANAGER:CreateTopLevelWindow(id)
+    local e = WINDOW_MANAGER:CreateTopLevelWindow(id)
 
     if args.hidden == nil then
         args.hidden = Ref(true)
     end
-    args.hidden:use(id .. "-hidden", function(_, new)
-        window:SetHidden(new)
+    args.hidden:use(id .. "-hidden", function(_, v)
+        e:SetHidden(v)
     end)
 
-    if args.dimensions == nil then
-        args.dimensions = Ref({ x = 0, y = 0 })
+    if args.height == nil then
+        args.height = Ref(0)
     end
-    args.dimensions:use(id .. "-dimensions", function(_, new)
-        window:SetDimensions(new.x, new.y)
+    args.height:use(id .. "-height", function(_, v)
+        e:SetHeight(v)
+    end)
+
+    if args.width == nil then
+        args.width = Ref(0)
+    end
+    args.width:use(id .. "-width", function(_, v)
+        e:SetWidth(v)
+    end)
+
+    if args.anchors == nil then
+        args.anchors = Ref({})
+    end
+    args.anchors:use(id .. "-anchors", function (_, v)
+        e:ClearAnchors()
+        for _, anchor in ipairs(v) do
+            e:SetAnchor(anchor.point, anchor.target, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
+        end
     end)
 
     return {
-        element = window,
+        element = e,
         hidden = args.hidden,
-        dimensions = args.dimensions,
+        height = args.height,
+        width = args.width,
     }
 end

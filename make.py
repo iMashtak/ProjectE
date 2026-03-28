@@ -40,7 +40,7 @@ def handle_gen_manifest():
         if len(files) == 0:
             continue
         for file in files:
-            if not file.endswith(".lua"):
+            if not file.endswith(".lua") or file == "_.lua":
                 continue
             file_path = os.path.join(directory, file)
             file_path = file_path.replace(root, "").removeprefix("/")
@@ -75,8 +75,9 @@ def handle_gen_manifest():
                 graph[right] = [left]
             else:
                 graph[right].append(left)
-    deps_list = iterative_topological_sort(graph, "$")[1:]
+    deps_list: list[str] = iterative_topological_sort(graph, "$")[1:]
     for dep in deps_list:
+        dep = dep.replace("/", "\\")
         result.append(f"{dep}\n")
     with open(os.path.join(root, "ProjectE.txt"), "w") as f:
         f.writelines(result)

@@ -1,31 +1,46 @@
 --* use /libs/Controls/ref.lua
 --* use /libs/Controls/layout.lua
+--* use /libs/Controls/label.lua
 
 local function OnTrigger()
     d("triggered")
     local layout = Controls.layout("E_WINDOW", {
         hidden = Ref(false),
-        dimensions = Ref({x = 100, y = 100})
+        anchors = Ref({
+            { point = TOPLEFT, target = GuiRoot, relativePoint = CENTER, offsetX = 0, offsetY = 0 },
+        }),
+        height = Ref(100),
+        width = Ref(100),
     })
-    layout.element:ClearAnchors()
-    layout.element:SetAnchor(CENTER, GuiRoot, CENTER, 0, 0)
-    layout.element:SetHidden(false)
     d("window created")
 
-    local button = WINDOW_MANAGER:CreateControl("E_BUTTON", layout.element, CT_TEXTURE)
-    button:SetDimensions(100, 100)
-    button:ClearAnchors()
-    button:SetAnchor(CENTER, layout.element, CENTER, 0, 0)
-    button:SetTexture("/esoui/art/cadwell/checkboxicon_checked.dds")
-    button:SetHidden(false)
-    button:SetMouseEnabled(true)
-    button:SetHandler(
-        "OnMouseDown",
-        function(self, button, ctrl, alt, shift)
-            d("clicked")
-            layout.element.SetHidden(true)
-        end
-    )
+    local label = Controls.label("E_LABEL", layout, {
+        hidden = Ref(false),
+        text = Ref("test"),
+        mouseEnabled = Ref(true),
+        anchors = Ref(AnchorStyle(layout, "fill")),
+    })
+    label.handlers.onMouseDown:set(function(self, button, ctrl, alt, shift, command)
+        d("clicked")
+        local current = label.text:get()
+        label.text:set(current .. "+used")
+    end)
+    d("label created")
+
+    -- local button = WINDOW_MANAGER:CreateControl("E_BUTTON", layout.element, CT_TEXTURE)
+    -- button:SetDimensions(100, 100)
+    -- button:ClearAnchors()
+    -- button:SetAnchor(CENTER, layout.element, CENTER, 0, 0)
+    -- button:SetTexture("/esoui/art/cadwell/checkboxicon_checked.dds")
+    -- button:SetHidden(false)
+    -- button:SetMouseEnabled(true)
+    -- button:SetHandler(
+    --     "OnMouseDown",
+    --     function(self, button, ctrl, alt, shift)
+    --         d("clicked")
+    --         layout.element.SetHidden(true)
+    --     end
+    -- )
 end
 
 local function Initialize(eventCode, addOnName)
