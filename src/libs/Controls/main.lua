@@ -17,8 +17,8 @@ Fonts = {
 function AnchorStyle(target, style)
     if style == "fill" then
         return {
-            { point = TOPLEFT,     target = target.element, relativePoint = TOPLEFT, offsetX = 0, offsetY = 0 },
-            { point = BOTTOMRIGHT, target = target.element, relativePoint = RIGHT,   offsetX = 0, offsetY = 0 },
+            { point = TOPLEFT,     target = target.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
+            { point = BOTTOMRIGHT, target = target.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
         }
     end
     return {}
