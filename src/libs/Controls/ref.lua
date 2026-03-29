@@ -2,6 +2,7 @@
 ---@field use fun(self: Ref<T>, id: string, hook: fun(old: T, new: T))
 ---@field set fun(self: Ref<T>, v: T)
 ---@field get fun(self: Ref<T>): T
+---@field free fun(self: Ref<T>, id: string)
 
 ---@generic T
 ---@param init T
