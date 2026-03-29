@@ -1,9 +1,19 @@
+--* use /libs/Logging/log.lua
 --* use /libs/Controls/ref.lua
 --* use /libs/Controls/layout.lua
 --* use /libs/Controls/checkbox.lua
+--* use /libs/Logging/log.lua
+
+local logger = Logger("/tests/ControlsSample/test.lua")
 
 local function OnTrigger()
-    d("triggered")
+    logger:trace("triggered")
+    if ControlsRegistry["E_WINDOW"] ~= nil then
+        logger:trace("opening existing window")
+        local layout = ControlsRegistry["E_WINDOW"] --[[@as Layout]]
+        layout.hidden:set(false)
+        return
+    end
     local layout = Controls.layout("E_WINDOW", {
         hidden = Ref(false),
         anchors = Ref({
@@ -12,27 +22,17 @@ local function OnTrigger()
         height = Ref(100),
         width = Ref(100),
     })
-    d("window created")
-
-    -- local label = Controls.label("E_LABEL", layout, {
-    --     hidden = Ref(false),
-    --     text = Ref("test"),
-    --     mouseEnabled = Ref(true),
-    --     anchors = Ref(AnchorStyle(layout, "fill")),
-    -- })
-    -- label.handlers.onMouseDown:set(function(self, button, ctrl, alt, shift, command)
-    --     d("clicked")
-    --     local current = label.text:get()
-    --     label.text:set(current .. "+used")
-    -- end)
-    -- d("label created")
+    logger:trace("window created")
 
     local checkbox = Controls.checkbox("E_CHECKBOX", layout, {
         hidden = Ref(false),
         text = Ref("description of checkbox"),
-        anchors = Ref(AnchorStyle(layout, "fill")),
+        anchors = Ref({
+            { point = TOPLEFT,     target = layout.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
+            { point = BOTTOMRIGHT, target = layout.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
+        }),
     })
-    d("checkbox created")
+    logger:trace("checkbox created")
 end
 
 local function Initialize(eventCode, addOnName)

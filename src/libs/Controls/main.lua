@@ -3,7 +3,11 @@ Controls = {}
 ---@class Element
 ---@field element any
 
+---@type {[string]: Element}
+ControlsRegistry = {}
+
 ---@alias AnchorSetting {point: any, target: any, relativePoint: any, offsetX: integer, offsetY: integer}
+---@alias ColorSetting {r: number, g: number, b: number, a: number}
 
 ---@alias OnMouseDownFun fun(self, button, ctrl, alt, shift, command)
 
@@ -11,15 +15,17 @@ Fonts = {
     game = "ZoFontGame",
 }
 
----@param target Element
----@param style string
----@return AnchorSetting[]
-function AnchorStyle(target, style)
-    if style == "fill" then
-        return {
-            { point = TOPLEFT,     target = target.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
-            { point = BOTTOMRIGHT, target = target.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
-        }
-    end
-    return {}
-end
+Textures = {
+    icons = {
+        missing = "/esoui/art/icons/icon_missing.dds"
+    },
+    bg = {
+        chatCenter = "/esoui/art/chatwindow/chat_bg_center.dds",
+        chatEdge = "/esoui/art/chatwindow/chat_bg_edge.dds"
+    }
+}
+
+---@type {[string]: ColorSetting}
+Colors = {
+    ["black"] = { r = 1, g = 1, b = 1, a = 0 }
+}

@@ -13,7 +13,14 @@
 
 ---@param id string
 ---@param parent Element
----@param args {hidden: Ref<boolean>?, text: Ref<string>?, height: Ref<integer>?, width: Ref<integer>?, mouseEnabled: Ref<boolean>?, anchors: Ref<AnchorSetting[]>?, font: Ref<string>}
+---@param args {
+---    hidden: Ref<boolean>?,
+---    text: Ref<string>?,
+---    height: Ref<integer>?,
+---    width: Ref<integer>?,
+---    mouseEnabled: Ref<boolean>?,
+---    anchors: Ref<AnchorSetting[]>?,
+---    font: Ref<string>?}
 ---@return Label
 ---@nodiscard
 function Controls.label(id, parent, args)

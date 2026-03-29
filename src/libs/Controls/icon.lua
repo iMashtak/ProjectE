@@ -50,7 +50,7 @@ function Controls.icon(id, parent, args)
     end)
 
     if args.texture == nil then
-        args.texture = Ref("/esoui/art/icons/icon_missing.dds")
+        args.texture = Ref(Textures.icons.missing)
     end
     args.texture:use(id .. "-texture", function(_, v)
         e:SetTexture(v)

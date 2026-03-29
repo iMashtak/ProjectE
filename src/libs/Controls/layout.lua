@@ -45,10 +45,12 @@ function Controls.layout(id, args)
         end
     end)
 
-    return {
+    local result = {
         element = e,
         hidden = args.hidden,
         height = args.height,
         width = args.width,
     }
+    ControlsRegistry[id] = result
+    return result
 end
