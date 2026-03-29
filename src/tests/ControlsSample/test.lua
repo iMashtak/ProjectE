@@ -2,7 +2,6 @@
 --* use /libs/Controls/ref.lua
 --* use /libs/Controls/layout.lua
 --* use /libs/Controls/checkbox.lua
---* use /libs/Logging/log.lua
 
 local logger = Logger("/tests/ControlsSample/test.lua")
 

@@ -46,10 +46,6 @@ function Controls.checkbox(id, parent, args)
         args.betweenSpace = Ref(-16)
     end
 
-    if args.state == nil then
-        args.state = Ref(false)
-    end
-
     local icon = Controls.icon(id .. "-icon", { element = e }, {
         hidden = args.hidden,
         height = Ref(32),
@@ -78,8 +74,8 @@ function Controls.checkbox(id, parent, args)
 
     args.betweenSpace:use(id .. "-betweenSpace", function(_, v)
         label.anchors:set({
-            { point = LEFT,        target = icon.element, relativePoint = RIGHT,       offsetX = 0, offsetY = 0 },
-            { point = BOTTOMRIGHT, target = e,            relativePoint = BOTTOMRIGHT, offsetX = v, offsetY = 0 },
+            { point = LEFT,        target = icon.element, relativePoint = RIGHT,       offsetX = v, offsetY = 0 },
+            { point = BOTTOMRIGHT, target = e,            relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
         })
     end)
 

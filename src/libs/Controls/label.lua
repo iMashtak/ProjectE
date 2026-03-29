@@ -93,5 +93,6 @@ function Controls.label(id, parent, args)
         height = args.height,
         width = args.width,
         anchors = args.anchors,
+        font = args.font,
     }
 end

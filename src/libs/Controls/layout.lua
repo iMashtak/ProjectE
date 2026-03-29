@@ -8,7 +8,11 @@
 ---@field anchors Ref<AnchorSetting[]>
 
 ---@param id string
----@param args {hidden: Ref<boolean>?, height: Ref<integer>?, width: Ref<integer>?, anchors: Ref<AnchorSetting[]>?}
+---@param args {
+---    hidden: Ref<boolean>?,
+---    height: Ref<integer>?,
+---    width: Ref<integer>?,
+---    anchors: Ref<AnchorSetting[]>?}
 ---@return Layout
 ---@nodiscard
 function Controls.layout(id, args)
@@ -50,6 +54,7 @@ function Controls.layout(id, args)
         hidden = args.hidden,
         height = args.height,
         width = args.width,
+        anchors = args.anchors,
     }
     ControlsRegistry[id] = result
     return result
