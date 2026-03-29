@@ -48,7 +48,7 @@ function Logger(name)
     ---@param message LogMessage
     function self:log(level, message)
         local selectedLevel = LogLevelSettings.root
-        for definedLogger, definedLevel in LogLevelSettings.loggers do
+        for definedLogger, definedLevel in pairs(LogLevelSettings.loggers) do
             if startsWith(name, definedLogger) then
                 selectedLevel = definedLevel
             end

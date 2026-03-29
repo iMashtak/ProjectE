@@ -43,7 +43,7 @@ def handle_gen_manifest():
             if not file.endswith(".lua") or file == "_.lua":
                 continue
             file_path = os.path.join(directory, file)
-            file_path = file_path.replace(root, "").removeprefix("/")
+            file_path = file_path.replace(root, "").removeprefix("/").removeprefix("\\")
             if file_path not in deps:
                 deps[file_path] = ["$"]
             with open(file_path, 'r') as f:
@@ -55,10 +55,10 @@ def handle_gen_manifest():
                     if parts[1] == "use":
                         dep_path = parts[2].strip()
                         if os.path.isabs(dep_path):
-                            dep_path = os.path.abspath(os.path.join(src, dep_path.removeprefix("/")))
+                            dep_path = os.path.abspath(os.path.join(src, dep_path.removeprefix("/").removeprefix("\\")))
                         else:
                             dep_path = os.path.abspath(os.path.join(directory, dep_path))
-                        dep_path = dep_path.replace(root, "").removeprefix("/")
+                        dep_path = dep_path.replace(root, "").removeprefix("/").removeprefix("\\")
                         if file_path in deps:
                             deps[file_path].append(dep_path)
                         else:

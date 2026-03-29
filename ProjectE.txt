@@ -6,8 +6,10 @@
 
 src\libs\Controls\main.lua
 src\libs\Controls\ref.lua
+src\libs\Controls\card.lua
 src\libs\Controls\icon.lua
 src\libs\Controls\label.lua
 src\libs\Controls\checkbox.lua
 src\libs\Controls\layout.lua
+src\libs\Logging\log.lua
 src\tests\ControlsSample\test.lua
