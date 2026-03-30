@@ -1,5 +1,5 @@
 ---@class Ref<T>
----@field use fun(self: Ref<T>, id: string, hook: fun(old: T, new: T))
+---@field use fun(self: Ref<T>, id: string, hook: fun(old: T, new: T), lazy: boolean?)
 ---@field set fun(self: Ref<T>, v: T)
 ---@field get fun(self: Ref<T>): T
 ---@field free fun(self: Ref<T>, id: string)
@@ -12,8 +12,10 @@ function Ref(init)
     local hooks = {}
     local self = {}
 
-    function self:use(id, hook)
-        hook(nil, value)
+    function self:use(id, hook, lazy)
+        if lazy == nil or not lazy then
+            hook(nil, value)
+        end
         hooks[id] = hook
     end
 

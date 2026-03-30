@@ -17,3 +17,6 @@ CT_TEXTURE = CT_TEXTURE
 CT_CONTROL = CT_CONTROL
 
 EVENT_ADD_ON_LOADED = EVENT_ADD_ON_LOADED
+
+---@type fun(data: {id: string, name: string, longname: string, callback: fun(), unselectedCallback: fun()})
+ZO_GameMenu_AddSettingPanel = ZO_GameMenu_AddSettingPanel

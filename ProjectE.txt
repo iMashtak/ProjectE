@@ -6,10 +6,11 @@
 
 src\libs\Controls\main.lua
 src\libs\Controls\ref.lua
-src\libs\Controls\card.lua
-src\libs\Controls\icon.lua
-src\libs\Controls\label.lua
-src\libs\Controls\checkbox.lua
-src\libs\Controls\layout.lua
+src\libs\Controls\basic\setupControl.lua
+src\libs\Controls\basic\backdrop.lua
+src\libs\Controls\basic\label.lua
+src\libs\Controls\basic\layout.lua
+src\libs\Controls\basic\texture.lua
+src\libs\Controls\composite\checkbox.lua
 src\libs\Logging\log.lua
 src\tests\ControlsSample\test.lua

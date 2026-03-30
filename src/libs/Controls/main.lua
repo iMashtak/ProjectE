@@ -17,7 +17,11 @@ Fonts = {
 
 Textures = {
     icons = {
-        missing = "/esoui/art/icons/icon_missing.dds"
+        missing = "/esoui/art/icons/icon_missing.dds",
+        checkbox = {
+            checked = "/esoui/art/cadwell/checkboxicon_checked.dds",
+            unchecked = "/esoui/art/cadwell/checkboxicon_unchecked.dds",
+        }
     },
     bg = {
         chatCenter = "/esoui/art/chatwindow/chat_bg_center.dds",

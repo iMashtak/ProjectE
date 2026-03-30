@@ -1,33 +1,30 @@
---* use ./main.lua
---* use ./ref.lua
+--* use ../main.lua
+--* use ../ref.lua
+--* use ./setupControl.lua
 
----@class Card
----@field hidden Ref<boolean>
----@field centerTexture Ref<string>
+---@class Backdrop : Control
 ---@field centerColor Ref<ColorSetting>
----@field edgeSettings Ref<{file: string, width: number, height: number, size: number, padding: number}>
+---@field centerTexture Ref<string>
 ---@field edgeColor Ref<ColorSetting>
----@field anchors Ref<AnchorSetting[]>
+---@field edgeSettings Ref<{file: string, width: number, height: number, size: number, padding: number}>
 
 ---@param id string
 ---@param parent Element
 ---@param args {
+---    anchors: Ref<AnchorSetting[]>?,
 ---    hidden: Ref<boolean>?,
----    centerTexture: Ref<string>?,
+---    height: Ref<integer?>?,
+---    mouseEnabled: Ref<boolean>?,
+---    width: Ref<integer?>?,
 ---    centerColor: Ref<ColorSetting>,
----    edgeSettings: Ref<{file: string, width: number, height: number, size: number, padding: number}>?,
+---    centerTexture: Ref<string>?,
 ---    edgeColor: Ref<ColorSetting>?,
----    anchors: Ref<AnchorSetting[]>?,}
----@return Card
-function Controls.card(id, parent, args)
+---    edgeSettings: Ref<{file: string, width: number, height: number, size: number, padding: number}>?,
+---}
+---@return Backdrop
+function Controls.backdrop(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_BACKDROP)
-
-    if args.hidden == nil then
-        args.hidden = Ref(true)
-    end
-    args.hidden:use(id .. "-hidden", function(_, v)
-        e:SetHidden(v)
-    end)
+    local result = Controls.setupControl(id, e, args) --[[@as Backdrop]]
 
     if args.centerTexture == nil then
         args.centerTexture = Ref(Textures.bg.chatCenter)
@@ -57,23 +54,5 @@ function Controls.card(id, parent, args)
         e:SetEdgeColor(v.r, v.g, v.b, v.a)
     end)
 
-    if args.anchors == nil then
-        args.anchors = Ref({})
-    end
-    args.anchors:use(id .. "-anchors", function(_, v)
-        e:ClearAnchors()
-        for _, anchor in ipairs(v) do
-            e:SetAnchor(anchor.point, anchor.target, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
-        end
-    end)
-
-    return {
-        element = e,
-        hidden = args.hidden,
-        centerTexture = args.centerTexture,
-        centerColor = args.centerColor,
-        edgeSettings = args.edgeSettings,
-        edgeColor = args.edgeColor,
-        anchors = args.anchors,
-    }
+    return result
 end
