@@ -1,52 +1,46 @@
---* use ./main.lua
---* use ./ref.lua
---* use ./icon.lua
---* use ./label.lua
+--* use ../main.lua
+--* use ../ref.lua
+--* use ../basic/icon.lua
+--* use ../basic/label.lua
 
----@class Checkbox : Element
----@field hidden Ref<boolean>
+---@class Checkbox : Control
 ---@field state Ref<boolean>
 ---@field text Ref<string>
 ---@field betweenSpace Ref<integer>
----@field anchors Ref<AnchorSetting[]>
 
 ---@param id string
 ---@param parent Element
----@param args {hidden: Ref<boolean>?, state: Ref<boolean>?, text: Ref<string>?, betweenSpace: Ref<integer>?, anchors: Ref<AnchorSetting[]>?}
+---@param args {
+---    anchors: Ref<AnchorSetting[]>?,
+---    hidden: Ref<boolean>?,
+---    height: Ref<integer?>?,
+---    mouseEnabled: Ref<boolean>?,
+---    width: Ref<integer?>?,
+---    state: Ref<boolean>?,
+---    text: Ref<string>?,
+---    betweenSpace: Ref<integer>?,
+---}
 ---@return Checkbox
 function Controls.checkbox(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
-
-    if args.hidden == nil then
-        args.hidden = Ref(true)
-    end
-    args.hidden:use(id .. "-hidden", function(_, v)
-        e:SetHidden(v)
-    end)
-
-    if args.anchors == nil then
-        args.anchors = Ref({})
-    end
-    args.anchors:use(id .. "-anchors", function(_, v)
-        e:ClearAnchors()
-        for _, anchor in ipairs(v) do
-            e:SetAnchor(anchor.point, anchor.target, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
-        end
-    end)
+    local result = Controls.setupControl(id, e, args) --[[@as Checkbox]]
 
     if args.state == nil then
         args.state = Ref(false)
     end
+    result.state = args.state
 
     if args.text == nil then
         args.text = Ref("")
     end
+    result.text = args.text
 
     if args.betweenSpace == nil then
-        args.betweenSpace = Ref(-16)
+        args.betweenSpace = Ref(8)
     end
+    result.betweenSpace = args.betweenSpace
 
-    local icon = Controls.icon(id .. "-icon", { element = e }, {
+    local icon = Controls.texture(id .. "-icon", { element = e }, {
         hidden = args.hidden,
         height = Ref(32),
         width = Ref(32),
@@ -58,9 +52,9 @@ function Controls.checkbox(id, parent, args)
 
     args.state:use(id .. "-state", function(_, v)
         if v then
-            icon.texture:set("/esoui/art/cadwell/checkboxicon_checked.dds")
+            icon.texture:set(Textures.icons.checkbox.checked)
         else
-            icon.texture:set("/esoui/art/cadwell/checkboxicon_unchecked.dds")
+            icon.texture:set(Textures.icons.checkbox.unchecked)
         end
     end)
     icon.handlers.onMouseDown:set(function(self, button, ctrl, alt, shift, command)
@@ -79,12 +73,5 @@ function Controls.checkbox(id, parent, args)
         })
     end)
 
-    return {
-        element = e,
-        hidden = args.hidden,
-        state = args.state,
-        text = args.text,
-        betweenSpace = args.betweenSpace,
-        anchors = args.anchors,
-    }
+    return result
 end
