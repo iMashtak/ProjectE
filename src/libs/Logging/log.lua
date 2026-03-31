@@ -17,7 +17,8 @@ end
 LogLevelSettings = {
     root = "off",
     loggers = {
-        ["/tests/"] = "trace"
+        ["/tests/"] = "trace",
+        ["/extensions/"] = "trace",
     },
 }
 

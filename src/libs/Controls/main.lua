@@ -26,10 +26,14 @@ Textures = {
     bg = {
         chatCenter = "/esoui/art/chatwindow/chat_bg_center.dds",
         chatEdge = "/esoui/art/chatwindow/chat_bg_edge.dds"
+    },
+    effects = {
+        crux = "/art/fx/texture/arcanist_trianglerune_01.dds"
     }
 }
 
 ---@type {[string]: ColorSetting}
 Colors = {
-    ["black"] = { r = 1, g = 1, b = 1, a = 0 }
+    ["black"] = { r = 1, g = 1, b = 1, a = 1 },
+    ["crux"] = { r = 0.7176470588, g = 1, b = 0.4862745098, a = 1 }
 }

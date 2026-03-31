@@ -6,6 +6,7 @@
 ---@field handlers {
 ---    onMouseDown: Ref<OnMouseDownFun|nil>?,
 ---}
+---@field color Ref<ColorSetting>
 ---@field texture Ref<string>
 
 ---@param id string
@@ -16,6 +17,7 @@
 ---    height: Ref<integer?>?,
 ---    mouseEnabled: Ref<boolean>?,
 ---    width: Ref<integer?>?,
+---    color: Ref<ColorSetting>?,
 ---    texture: Ref<string>?,
 ---}
 ---@return Texture
@@ -23,6 +25,14 @@
 function Controls.texture(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_TEXTURE)
     local result = Controls.setupControl(id, e, args) --[[@as Texture]]
+
+    if args.color == nil then
+        args.color = Ref(Colors["black"])
+    end
+    args.color:use(id .. "-color", function(_, v)
+        e:SetColor(v.r, v.g, v.b, v.a)
+    end)
+    result.color = args.color
 
     if args.texture == nil then
         args.texture = Ref(nil)
