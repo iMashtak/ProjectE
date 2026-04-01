@@ -4,6 +4,7 @@
 ## Version: 1.0.0
 ## APIVersion: 101049
 
+src\extensions\Crux\main.xml
 src\libs\Controls\main.lua
 src\libs\Controls\ref.lua
 src\libs\Controls\basic\setupControl.lua

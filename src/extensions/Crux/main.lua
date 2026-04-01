@@ -1,3 +1,4 @@
+--* use ./main.xml
 --* use /libs/Controls/main.lua
 --* use /libs/Controls/ref.lua
 --* use /libs/Logging/log.lua
@@ -65,6 +66,58 @@ local function OnPlayerStateChanged(cruxLeft, cruxRight, cruxUp)
     end
 end
 
+---@param layout Layout
+---@param suffix string
+---@param position any
+---@return Texture
+local function CreateCrux(layout, suffix, position)
+    local cruxColor = Ref(Colors["crux"])
+    local crux = Controls.texture("E_CRUX_TEXTURE_" .. suffix, layout, {
+        anchors = Ref({
+            { point = position, target = layout.element, relativePoint = position, offsetX = 0, offsetY = 0 }
+        }),
+        height = Ref(32),
+        width = Ref(32),
+        texture = Ref(Textures.effects.crux),
+        color = cruxColor,
+    })
+    local cruxSmoke = Controls.texture("E_CRUX_TEXTURE_SMOKE_" .. suffix, crux, {
+        hidden = Ref(false),
+        anchors = Ref({
+            { point = CENTER, target = crux.element, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
+        }),
+        height = Ref(96),
+        width = Ref(96),
+        texture = Ref("/art/fx/texture/smoke_billowy_6x6.dds"),
+        color = RefC(
+            "E_CRUX_TEXTURE_SMOKE_" .. suffix,
+            { cruxColor },
+            function(color)
+                return { r = color.r, g = color.g, b = color.b, a = 1 }
+            end
+        ),
+    })
+    local cruxSmokeTimeline = ANIMATION_MANAGER:CreateTimelineFromVirtual("E_CRUX_SMOKE_ANIMATION", cruxSmoke.element)
+    crux.element:SetHandler("OnHidden", function()
+        cruxSmokeTimeline:Stop()
+    end)
+    crux.element:SetHandler("OnShow", function()
+        cruxSmokeTimeline:PlayFromStart()
+    end)
+    local cruxGlow = Controls.texture("E_CRUX_TEXTURE_GLOW_" .. suffix, crux, {
+        hidden = Ref(false),
+        anchors = Ref({
+            { point = CENTER, target = crux.element, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
+        }),
+        height = Ref(48),
+        width = Ref(48),
+        texture = Ref("/art/fx/texture/lensflares_02_2x2.dds"),
+        color = cruxColor,
+    })
+    cruxGlow.element:SetTextureCoords(0, 0.5, 0, 0.5)
+    return crux
+end
+
 local function Initialize(_, addOnName)
     if addOnName ~= "ProjectE" then
         return
@@ -85,33 +138,9 @@ local function Initialize(_, addOnName)
         height = Ref(128),
         width = Ref(128),
     })
-    local cruxLeft = Controls.texture("E_CRUX_TEXTURE_LEFT", layout, {
-        anchors = Ref({
-            { point = LEFT, target = layout.element, relativePoint = LEFT, offsetX = 0, offsetY = 0 }
-        }),
-        height = Ref(32),
-        width = Ref(32),
-        texture = Ref(Textures.effects.crux),
-        color = Ref(Colors["crux"]),
-    })
-    local cruxRight = Controls.texture("E_CRUX_TEXTURE_RIGHT", layout, {
-        anchors = Ref({
-            { point = RIGHT, target = layout.element, relativePoint = RIGHT, offsetX = 0, offsetY = 0 }
-        }),
-        height = Ref(32),
-        width = Ref(32),
-        texture = Ref(Textures.effects.crux),
-        color = Ref(Colors["crux"]),
-    })
-    local cruxUp = Controls.texture("E_CRUX_TEXTURE_UP", layout, {
-        anchors = Ref({
-            { point = TOP, target = layout.element, relativePoint = TOP, offsetX = 0, offsetY = 0 }
-        }),
-        height = Ref(32),
-        width = Ref(32),
-        texture = Ref(Textures.effects.crux),
-        color = Ref(Colors["crux"]),
-    })
+    local cruxLeft = CreateCrux(layout, "LEFT", LEFT)
+    local cruxRight = CreateCrux(layout, "RIGHT", RIGHT)
+    local cruxUp = CreateCrux(layout, "UP", TOP)
 
     EVENT_MANAGER:RegisterForEvent(
         "E_CRUX_EVENT_EFFECT_CHANGED",

@@ -34,6 +34,6 @@ Textures = {
 
 ---@type {[string]: ColorSetting}
 Colors = {
-    ["black"] = { r = 1, g = 1, b = 1, a = 1 },
-    ["crux"] = { r = 0.7176470588, g = 1, b = 0.4862745098, a = 1 }
+    ["black"] = { r = 0, g = 0, b = 0, a = 1 },
+    ["crux"] = { r = 0.6445, g = 1, b = 0.4219, a = 1 },
 }
