@@ -40,7 +40,7 @@ def handle_gen_manifest():
         if len(files) == 0:
             continue
         for file in files:
-            if not file.endswith(".lua") or file == "_.lua":
+            if (not file.endswith(".lua") and not file.endswith(".xml")) or file == "_.lua":
                 continue
             file_path = os.path.join(directory, file)
             file_path = file_path.replace(root, "").removeprefix("/").removeprefix("\\")
@@ -49,7 +49,7 @@ def handle_gen_manifest():
             with open(file_path, 'r') as f:
                 while True:
                     line = f.readline()
-                    if not line.startswith("--*"):
+                    if not line.startswith("--*") and not line.startswith("<!--*"):
                         break
                     parts = line.split(" ")
                     if parts[1] == "use":
@@ -61,8 +61,6 @@ def handle_gen_manifest():
                         dep_path = dep_path.replace(root, "").removeprefix("/").removeprefix("\\")
                         if file_path in deps:
                             deps[file_path].append(dep_path)
-                        else:
-                            deps[file_path] = [dep_path]
                     else:
                         print("unknown command:", parts[1])
                         return 1
