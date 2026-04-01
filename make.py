@@ -40,7 +40,7 @@ def handle_gen_manifest():
         if len(files) == 0:
             continue
         for file in files:
-            if not file.endswith(".lua") and not file.endswith(".xml") or file == "_.lua":
+            if (not file.endswith(".lua") and not file.endswith(".xml")) or file == "_.lua":
                 continue
             file_path = os.path.join(directory, file)
             file_path = file_path.replace(root, "").removeprefix("/").removeprefix("\\")
