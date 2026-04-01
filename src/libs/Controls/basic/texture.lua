@@ -27,11 +27,15 @@ function Controls.texture(id, parent, args)
     local result = Controls.setupControl(id, e, args) --[[@as Texture]]
 
     if args.color == nil then
-        args.color = Ref(Colors["black"])
+        args.color = Ref(nil)
+        args.color:use(id .. "-color", function(_, v)
+            e:SetColor(v.r, v.g, v.b, v.a)
+        end, true)
+    else
+        args.color:use(id .. "-color", function(_, v)
+            e:SetColor(v.r, v.g, v.b, v.a)
+        end)
     end
-    args.color:use(id .. "-color", function(_, v)
-        e:SetColor(v.r, v.g, v.b, v.a)
-    end)
     result.color = args.color
 
     if args.texture == nil then
