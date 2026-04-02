@@ -1,4 +1,5 @@
 --* use ./main.xml
+--* use ../host.lua
 --* use /libs/Controls/main.lua
 --* use /libs/Controls/ref.lua
 --* use /libs/Logging/log.lua
@@ -118,18 +119,7 @@ local function CreateCrux(layout, suffix, position)
     return crux
 end
 
-local function Initialize(_, addOnName)
-    if addOnName ~= "ProjectE" then
-        return
-    end
-    EVENT_MANAGER:UnregisterForEvent("E_CRUX", EVENT_ADD_ON_LOADED)
-
-    if ControlsRegistry["E_CRUX_LAYOUT"] ~= nil then
-        local layout = ControlsRegistry["E_CRUX_LAYOUT"] --[[@as Layout]]
-        layout.hidden:set(false)
-        return
-    end
-
+local function InitializeExtension()
     local layout = Controls.layout("E_CRUX_LAYOUT", {
         hidden = Ref(false),
         anchors = Ref({
@@ -175,4 +165,22 @@ local function Initialize(_, addOnName)
     )
 end
 
-EVENT_MANAGER:RegisterForEvent("E_CRUX", EVENT_ADD_ON_LOADED, Initialize)
+---@param parent Element
+local function InitializeSettings(parent)
+    local layout = ControlsRegistry["E_CRUX_LAYOUT"] --[[@as Layout]]
+    local enabled = Controls.checkbox("E_CRUX_SETTINGS_ENABLED", parent, {
+        hidden = Ref(false),
+        text = Ref("enabled"),
+        state = Ref(true),
+        anchors = Ref({
+            { point = TOPLEFT,  target = parent.element, relativePoint = TOPLEFT,  offsetX = 0, offsetY = 0 },
+            { point = TOPRIGHT, target = parent.element, relativePoint = TOPRIGHT, offsetX = 0, offsetY = 0 },
+        }),
+        height = Ref(32),
+    })
+    enabled.state:use("E_CRUX_SETTINGS_ENABLED_STATE", function(_, v)
+        layout.hidden:set(not v)
+    end)
+end
+
+RegisterExtension("Crux", InitializeExtension, InitializeSettings)
