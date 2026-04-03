@@ -13,6 +13,7 @@ src\libs\Controls\basic\label.lua
 src\libs\Controls\basic\layout.lua
 src\libs\Controls\basic\texture.lua
 src\libs\Controls\composite\checkbox.lua
+src\libs\Controls\composite\scrollList.lua
 src\libs\Controls\composite\tabPanels.lua
 src\libs\Controls\composite\tabs.lua
 src\extensions\host.lua
