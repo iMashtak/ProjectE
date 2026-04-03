@@ -71,6 +71,7 @@ local function Initialize(_, addOnName)
         state = tabs.state,
         tabNames = tabs.tabNames,
     })
+    tabs.state:set(tabs.state:get() --[[@as string]])
     local scene = ZO_FadeSceneFragment:New(layout.element, true, 100)
     scene:RegisterCallback("StateChange", function(_, newState)
         if (newState == SCENE_FRAGMENT_SHOWN) then
