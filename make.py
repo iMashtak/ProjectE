@@ -4,6 +4,7 @@ import sys
 import os
 import json
 import argparse
+import posixpath
 
 root = os.path.dirname(os.path.abspath(__file__))
 
@@ -54,7 +55,7 @@ def handle_gen_manifest():
                     parts = line.split(" ")
                     if parts[1] == "use":
                         dep_path = parts[2].strip()
-                        if os.path.isabs(dep_path):
+                        if posixpath.isabs(dep_path):
                             dep_path = os.path.abspath(os.path.join(src, dep_path.removeprefix("/").removeprefix("\\")))
                         else:
                             dep_path = os.path.abspath(os.path.join(directory, dep_path))

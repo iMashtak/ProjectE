@@ -10,6 +10,7 @@ ControlsRegistry = {}
 ---@alias ColorSetting {r: number, g: number, b: number, a: number}
 
 ---@alias OnMouseDownFun fun(self, button, ctrl, alt, shift, command)
+---@alias OnMouseUpFun fun(self, button, upInside, ctrl, alt, shift, command)
 
 Fonts = {
     game = "ZoFontGame",
@@ -29,6 +30,14 @@ Textures = {
     },
     effects = {
         crux = "/art/fx/texture/arcanist_trianglerune_01.dds"
+    },
+    plus = {
+        pointplus = "/esoui/art/tutorial/pointsplus_up.dds",
+        zoomplus = "/esoui/art/tutorial/minimap_zoomplus_up.dds"
+    },
+    minus = {
+        pointminus = "/esoui/art/tutorial/pointsminus_up.dds",
+        zoomminus = "/esoui/art/tutorial/minimap_zoomminus_up.dds"
     }
 }
 
