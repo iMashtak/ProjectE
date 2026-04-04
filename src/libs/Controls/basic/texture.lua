@@ -4,7 +4,8 @@
 
 ---@class Texture : Control
 ---@field handlers {
----    onMouseDown: Ref<OnMouseDownFun|nil>?,
+---    onMouseDown: Ref<OnMouseDownFun?>?,
+---    onMouseUp: Ref<OnMouseUpFun?>?,
 ---}
 ---@field color Ref<ColorSetting>
 ---@field texture Ref<string>
@@ -51,10 +52,14 @@ function Controls.texture(id, parent, args)
     result.texture = args.texture
 
     local handlers = {
-        onMouseDown = Ref(nil)
+        onMouseDown = Ref(nil),
+        onMouseUp = Ref(nil)
     }
     handlers.onMouseDown:use(id .. "-handlers-onMouseDown", function(_, v)
         e:SetHandler("OnMouseDown", v)
+    end)
+    handlers.onMouseUp:use(id .. "-handlers-onMouseUp", function(_, v)
+        e:SetHandler("OnMouseUp", v)
     end)
     result.handlers = handlers
 
