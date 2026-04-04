@@ -92,7 +92,7 @@ local function Initialize(_, addOnName)
     })
 
     for _, ext in ipairs(Extensions) do
-        ext.initializeSettings(panels.panels[ext.name])
+        ext.initializeSettings(panels.panels[ext.name].children.inner)
     end
 end
 

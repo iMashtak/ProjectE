@@ -69,8 +69,8 @@ function Controls.checkbox(id, parent, args)
     args.betweenSpace:use(id .. "-betweenSpace", function(_, v)
         label.anchors:set({
             { point = TOPLEFT,     target = icon.element, relativePoint = TOPRIGHT,    offsetX = v, offsetY = 0 },
-            { point = BOTTOMRIGHT, target = e,            relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
         })
+        label.width:set(e:GetWidth())
     end)
 
     return result

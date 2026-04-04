@@ -1,11 +1,12 @@
 --* use ../main.lua
 --* use ../ref.lua
 --* use ../basic/setupControl.lua
+--* use ./scrollArea.lua
 
 ---@class TabPanels : Control
 ---@field state Ref<string?>
 ---@field tabNames Ref<string[]>
----@field panels {[string]: Control}
+---@field panels {[string]: ScrollArea}
 
 ---@param id string
 ---@param parent Element
@@ -23,7 +24,7 @@ function Controls.tabPanels(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
     local result = Controls.setupControl(id, e, args) --[[@as TabPanels]]
 
-    ---@type {[string]: Control}
+    ---@type {[string]: ScrollArea}
     local panels = {}
 
     if args.state == nil then
@@ -31,21 +32,22 @@ function Controls.tabPanels(id, parent, args)
     end
     args.state:use(id .. "-tabPanels-state", function(old, new)
         if old ~= nil and panels[old] ~= nil then
-            panels[old].hidden:set(true)
+            panels[old].params.hidden:set(true)
         end
         if new ~= nil and panels[new] ~= nil then
-            panels[new].hidden:set(false)
+            panels[new].params.hidden:set(false)
         end
     end)
     result.state = args.state
 
     local function createPanel(name)
-        local panelControl = WINDOW_MANAGER:CreateControl(id .. "-panel-" .. name, parent.element, CT_CONTROL)
-        local panel = Controls.setupControl(id .. "-panel-" .. name, panelControl, {
-            anchors = Ref({
-                { point = TOPLEFT,     target = e, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
-                { point = BOTTOMRIGHT, target = e, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
-            })
+        local panel = Controls.scrollArea(id .. "-panel-" .. name, result, {
+            params = {
+                anchors = Ref({
+                    { point = TOPLEFT,     target = result.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
+                    { point = BOTTOMRIGHT, target = result.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
+                })
+            },
         })
         return panel
     end
