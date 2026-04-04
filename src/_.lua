@@ -15,6 +15,7 @@ LEFT = LEFT
 TOPRIGHT = TOPRIGHT
 TOP = TOP
 BOTTOMLEFT = BOTTOMLEFT
+GetControl = GetControl
 
 CT_BACKDROP = CT_BACKDROP
 CT_LABEL = CT_LABEL
@@ -37,7 +38,7 @@ SCENE_FRAGMENT_HIDDEN = SCENE_FRAGMENT_HIDDEN
 PushActionLayerByName = PushActionLayerByName
 RemoveActionLayerByName = RemoveActionLayerByName
 
----@type fun(data: {id: string, name: string, longname: string, callback: fun(), unselectedCallback: fun()})
+---@type fun(data: {id: string, name: string, callback: fun(), unselectedCallback: fun()})
 ZO_GameMenu_AddSettingPanel = ZO_GameMenu_AddSettingPanel
 ZO_FadeSceneFragment = ZO_FadeSceneFragment
 
