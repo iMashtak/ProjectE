@@ -18,6 +18,7 @@ def handle_gen_manifest():
     result.append(f"## Author: {manifest['author']}\n")
     result.append(f"## Version: {manifest['version']}\n")
     result.append(f"## APIVersion: {manifest['api_version']}\n")
+    result.append(f"## SavedVariables: {' '.join(manifest['saved_variables'])}\n")
     result.append("\n")
     
     def iterative_topological_sort(graph, start):

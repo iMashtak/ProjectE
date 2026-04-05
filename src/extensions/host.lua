@@ -4,7 +4,7 @@
 --* use /libs/Controls/composite/tabs.lua
 --* use /libs/Controls/composite/tabPanels.lua
 
----@alias Extension {name: string, initializeExtension: fun(), initializeSettings: fun(parent: Element)}
+---@alias Extension {name: string, initializeExtension: fun(vars: table), initializeSettings: fun(vars: table, parent: Element)}
 
 ---@type Extension[]
 local Extensions = {}
@@ -26,9 +26,22 @@ local function Initialize(_, addOnName)
     end
     EVENT_MANAGER:UnregisterForEvent("E_EXTENSIONS", EVENT_ADD_ON_LOADED)
 
+    local vars = ZO_SavedVars:NewAccountWide("E_VARS", 1, nil, {}, GetWorldName())
+    local characterId = GetCurrentCharacterId()
+    local characterName = GetUnitName("player")
+    if vars.global == nil then
+        vars.global = {}
+    end
+    if vars.global.characters == nil then
+        vars.global.characters = {}
+    end
+    vars.global.characters[characterId] = {
+        name = characterName
+    }
+
     local tabNames = {}
     for _, ext in ipairs(Extensions) do
-        ext.initializeExtension()
+        ext.initializeExtension(vars)
         tabNames[#tabNames + 1] = ext.name
     end
     table.sort(tabNames)
@@ -92,7 +105,7 @@ local function Initialize(_, addOnName)
     })
 
     for _, ext in ipairs(Extensions) do
-        ext.initializeSettings(panels.panels[ext.name].children.inner)
+        ext.initializeSettings(vars, panels.panels[ext.name].children.inner)
     end
 end
 

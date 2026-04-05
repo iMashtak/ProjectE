@@ -3,6 +3,7 @@
 ## Author: iMashtak (@Miaderali)
 ## Version: 1.0.0
 ## APIVersion: 101049
+## SavedVariables: E_VARS
 
 src\extensions\Crux\main.xml
 src\libs\Controls\main.lua
