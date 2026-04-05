@@ -67,6 +67,7 @@ function Controls.scrollArea(id, parent, args)
     end
 
     local result = {
+        element = ec.element,
         params = {
             anchors = ec.anchors,
             height = ec.height,
