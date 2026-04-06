@@ -3,5 +3,8 @@
     "description": "General purpose extensible add-on",
     "author": "iMashtak (@Miaderali)",
     "version": "1.0.0",
-    "api_version": "101049"
+    "api_version": "101049",
+    "saved_variables": [
+        "E_VARS"
+    ]
 }

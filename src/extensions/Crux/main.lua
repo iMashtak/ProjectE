@@ -119,7 +119,7 @@ local function CreateCrux(layout, suffix, position)
     return crux
 end
 
-local function InitializeExtension()
+local function InitializeExtension(vars)
     local layout = Controls.layout("E_CRUX_LAYOUT", {
         hidden = Ref(false),
         anchors = Ref({
@@ -166,7 +166,7 @@ local function InitializeExtension()
 end
 
 ---@param parent Element
-local function InitializeSettings(parent)
+local function InitializeSettings(vars, parent)
     local layout = ControlsRegistry["E_CRUX_LAYOUT"] --[[@as Layout]]
     local enabled = Controls.checkbox("E_CRUX_SETTINGS_ENABLED", parent, {
         hidden = Ref(false),

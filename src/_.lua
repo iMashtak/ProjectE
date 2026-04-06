@@ -51,6 +51,9 @@ SKILL_TYPE_NONE = SKILL_TYPE_NONE
 GetSkillLineIndicesFromSkillLineId = GetSkillLineIndicesFromSkillLineId
 GetNumBuffs = GetNumBuffs
 GetUnitBuffInfo = GetUnitBuffInfo
+GetCurrentCharacterId = GetCurrentCharacterId
+GetUnitName = GetUnitName
+GetWorldName = GetWorldName
 
 REGISTER_FILTER_ABILITY_ID = REGISTER_FILTER_ABILITY_ID
 REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE = REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE
@@ -79,6 +82,7 @@ GetCurrencyKeyboardIcon = GetCurrencyKeyboardIcon
 zo_iconFormat = zo_iconFormat
 
 ZO_PerformanceMeters = ZO_PerformanceMeters
+ZO_SavedVars = ZO_SavedVars
 
 ZO_Tooltips_ShowTextTooltip = ZO_Tooltips_ShowTextTooltip
 ZO_Tooltips_HideTextTooltip = ZO_Tooltips_HideTextTooltip
