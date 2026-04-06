@@ -1,5 +1,7 @@
 ---@alias LogLevel "trace" | "debug" | "info" | "warn" | "error" | "off"
 
+L = {}
+
 local logLevelNumbering = {
     ["trace"] = 1,
     ["debug"] = 2,
@@ -19,6 +21,7 @@ LogLevelSettings = {
     loggers = {
         ["/tests/"] = "trace",
         ["/extensions/"] = "trace",
+        ["/libs/"] = "trace",
     },
 }
 
@@ -42,6 +45,7 @@ function Logger(name)
         if type(message) == "function" then
             m = message()
         end
+        L[#L + 1] = level .. " [" .. name .. "] " .. m
         d(level .. " [" .. name .. "] " .. m)
     end
 

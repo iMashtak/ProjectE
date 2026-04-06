@@ -1,4 +1,6 @@
-Controls = {}
+Controls = {
+    Dsl = {}
+}
 
 ---@class Element
 ---@field element any

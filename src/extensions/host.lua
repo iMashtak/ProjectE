@@ -26,6 +26,12 @@ local function Initialize(_, addOnName)
     end
     EVENT_MANAGER:UnregisterForEvent("E_EXTENSIONS", EVENT_ADD_ON_LOADED)
 
+    SLASH_COMMANDS["/elog"] = function ()
+        for i, message in ipairs(L) do
+            d(i, message)
+        end
+    end
+
     local vars = ZO_SavedVars:NewAccountWide("E_VARS", 1, nil, {}, GetWorldName())
     local characterId = GetCurrentCharacterId()
     local characterName = GetUnitName("player")

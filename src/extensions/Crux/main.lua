@@ -163,6 +163,9 @@ local function InitializeExtension(vars)
         EVENT_ZONE_UPDATE,
         OnPlayerStateChanged(cruxLeft, cruxRight, cruxUp)
     )
+    local fragment = ZO_HUDFadeSceneFragment:New(layout.element, nil, 0)
+    HUD_SCENE:AddFragment(fragment)
+    HUD_UI_SCENE:AddFragment(fragment)
 end
 
 ---@param parent Element

@@ -22,6 +22,7 @@ src\libs\Controls\composite\tabs.lua
 src\extensions\host.lua
 src\libs\Logging\log.lua
 src\extensions\Crux\main.lua
+src\libs\Controls\composite\table.lua
 src\extensions\Currency\main.lua
 src\tests\ControlsSample\chiefControlsSample.lua
 src\tests\ControlsSample\test.lua
