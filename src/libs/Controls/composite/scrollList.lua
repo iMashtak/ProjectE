@@ -2,26 +2,43 @@
 --* use ../ref.lua
 --* use ../basic/setupControl.lua
 
----@class ScrollList : Control
+local font = "$(BOLD_FONT)|$(KB_18)|soft-shadow-thick"
+
+---@class ScrollList : Element
+---@field params ScrollListParams
+---@field handlers ScrollListHandlers
+---@field children ScrollListChildren
+
+---@class ScrollListParams : ControlParams
 ---@field entries Ref<string[]>
 
-local font = "$(BOLD_FONT)|$(KB_18)|soft-shadow-thick"
+---@class ScrollListHandlers : ControlHandlers
+---@field onSelected Handlers<fun(old: {text: string}?, new: {text: string}?)>
+
+---@class ScrollListChildren
+
+---@class ScrollListParamsArgs : ControlParamsArgs
+---@field entries Ref<string[]>?
+
+---@class ScrollListEventsArgs : ControlEventsArgs
+---@field onSelected Ref<fun(old: {text: string}?, new: {text: string}?)>
+
+---@class ScrollListSlotsArgs
 
 ---@param id string
 ---@param parent Element
 ---@param args {
----    anchors: Ref<AnchorSetting[]>?,
----    hidden: Ref<boolean>?,
----    height: Ref<integer?>?,
----    mouseEnabled: Ref<boolean>?,
----    width: Ref<integer?>?,
----    entries: Ref<string[]>?,
----    onSelected: Ref<fun(old: {text: string}?, new: {text: string}?)>,
+---    params: ScrollListParamsArgs?,
+---    events: ScrollListEventsArgs?,
+---    slots: ScrollListSlotsArgs?,
 ---}
 ---@return ScrollList
+---@nodiscard
 function Controls.scrollList(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
     local result = Controls.setupControl(id, e, args) --[[@as ScrollList]]
+
+    result.handlers.onSelected = MakeHandlers(args.events.onSelected, function(_, _, _, _) end)
 
     local list = WINDOW_MANAGER:CreateControlFromVirtual(id .. "-scrollList", e, "ZO_ScrollList")
 
@@ -34,7 +51,7 @@ function Controls.scrollList(id, parent, args)
 
     local function onSelected(previouslySelectedData, selectedData, reselectingDuringRebuild)
         if not reselectingDuringRebuild then
-            args.onSelected:get()(previouslySelectedData, selectedData)
+            args.events.onSelected:get()(previouslySelectedData, selectedData)
         end
     end
 
@@ -70,10 +87,10 @@ function Controls.scrollList(id, parent, args)
     list:SetHeight(e:GetHeight())
     list:SetWidth(e:GetWidth())
 
-    if args.entries == nil then
-        args.entries = Ref({})
+    if args.params.entries == nil then
+        args.params.entries = Ref({})
     end
-    args.entries:use(id .. "-entries", function(_, v)
+    args.params.entries:use(id .. "-entries", function(_, v)
         local entryList = ZO_ScrollList_GetDataList(list)
         ZO_ScrollList_Clear(list)
         for i, str in ipairs(v) do
@@ -84,9 +101,8 @@ function Controls.scrollList(id, parent, args)
         end
         ZO_ScrollList_Commit(list)
         ZO_ScrollList_SelectData(list, { text = v[1], index = 1 }, nil)
-        args.onSelected:get()(nil, { text = v[1], index = 1 })
+        args.events.onSelected:get()(nil, { text = v[1], index = 1 })
     end)
-    result.entries = args.entries
 
     return result
 end

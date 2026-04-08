@@ -1,49 +1,68 @@
 --* use ../main.lua
 --* use ../ref.lua
 --* use ../basic/setupControl.lua
---* use ../basic/label.lua
 --* use ./scrollList.lua
 
----@class Tabs : Control
----@field state Ref<string?>
+---@class Tabs : Element
+---@field params TabsParams
+---@field handlers TabsHandlers
+---@field children TabsChildren
+
+---@class TabsParams : ControlParams
+---@field state Ref<string|nil>
 ---@field tabNames Ref<string[]>
+
+---@class TabsHandlers : ControlHandlers
+
+---@class TabsChildren
+
+---@class TabsParamsArgs : ControlParamsArgs
+---@field state Ref<string|nil>?
+---@field tabNames Ref<string[]>?
+
+---@class TabsEventsArgs : ControlEventsArgs
+
+---@class TabsSlotsArgs
 
 ---@param id string
 ---@param parent Element
 ---@param args {
----    anchors: Ref<AnchorSetting[]>?,
----    hidden: Ref<boolean>?,
----    height: Ref<integer?>?,
----    mouseEnabled: Ref<boolean>?,
----    width: Ref<integer?>?,
----    state: Ref<string>?,
----    tabNames: Ref<string[]>?,
+---    params: TabsParamsArgs?,
+---    events: TabsEventsArgs?,
+---    slots: TabsSlotsArgs?,
 ---}
 ---@return Tabs
+---@nodiscard
 function Controls.tabs(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
     local result = Controls.setupControl(id, e, args) --[[@as Tabs]]
 
-    if args.state == nil then
-        args.state = Ref(nil)
+    if args.params.state == nil then
+        args.params.state = Ref(nil)
     end
-    result.state = args.state
-    if args.tabNames == nil then
-        args.tabNames = Ref({})
+    if args.params.tabNames == nil then
+        args.params.tabNames = Ref({})
     end
-    result.tabNames = args.tabNames
 
     local scroll = Controls.scrollList(id .. "-scroll", result, {
-        anchors = Ref({
-            { point = TOPLEFT, result.element, relativePoint = TOPLEFT, offsetX = 0, offsetY = 0 }
-        }),
-        hidden = Ref(false),
-        height = result.height,
-        width = result.width,
-        onSelected = Ref(function (_, new)
-            args.state:set(new.text)
-        end),
-        entries = args.tabNames,
+        params = {
+            anchors = Ref({
+                { point = TOPLEFT, result.element, relativePoint = TOPLEFT, offsetX = 0, offsetY = 0 }
+            }),
+            hidden = Ref(false),
+            height = result.params.height,
+            width = result.params.width,
+            entries = args.params.tabNames,
+        },
+        events = {
+            onSelected = Ref(function(_, new)
+                if new == nil then
+                    args.params.state:set(nil)
+                else
+                    args.params.state:set(new.text)
+                end
+            end),
+        }
     })
 
     return result

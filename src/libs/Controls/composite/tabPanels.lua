@@ -3,23 +3,37 @@
 --* use ../basic/setupControl.lua
 --* use ./scrollArea.lua
 
----@class TabPanels : Control
----@field state Ref<string?>
+---@class TabPanels : Element
+---@field params TabPanelsParams
+---@field handlers TabPanelsHandlers
+---@field children TabPanelsChildren
+
+---@class TabPanelsParams : ControlParams
+---@field state Ref<string|nil>
 ---@field tabNames Ref<string[]>
+
+---@class TabPanelsHandlers : ControlHandlers
+
+---@class TabPanelsChildren
 ---@field panels {[string]: ScrollArea}
+
+---@class TabPanelsParamsArgs : ControlParamsArgs
+---@field state Ref<string|nil>?
+---@field tabNames Ref<string[]>?
+
+---@class TabPanelsEventsArgs : ControlEventsArgs
+
+---@class TabPanelsSlotsArgs
 
 ---@param id string
 ---@param parent Element
 ---@param args {
----    anchors: Ref<AnchorSetting[]>?,
----    hidden: Ref<boolean>?,
----    height: Ref<integer?>?,
----    mouseEnabled: Ref<boolean>?,
----    width: Ref<integer?>?,
----    state: Ref<string>?,
----    tabNames: Ref<string[]>?,
+---    params: TabPanelsParamsArgs?,
+---    events: TabPanelsEventsArgs?,
+---    slots: TabPanelsSlotsArgs?,
 ---}
 ---@return TabPanels
+---@nodiscard
 function Controls.tabPanels(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
     local result = Controls.setupControl(id, e, args) --[[@as TabPanels]]
@@ -27,10 +41,10 @@ function Controls.tabPanels(id, parent, args)
     ---@type {[string]: ScrollArea}
     local panels = {}
 
-    if args.state == nil then
-        args.state = Ref(nil)
+    if args.params.state == nil then
+        args.params.state = Ref(nil)
     end
-    args.state:use(id .. "-tabPanels-state", function(old, new)
+    args.params.state:use(id .. "-tabPanels-state", function(old, new)
         if old ~= nil and panels[old] ~= nil then
             panels[old].params.hidden:set(true)
         end
@@ -38,7 +52,6 @@ function Controls.tabPanels(id, parent, args)
             panels[new].params.hidden:set(false)
         end
     end)
-    result.state = args.state
 
     local function createPanel(name)
         local panel = Controls.scrollArea(id .. "-panel-" .. name, result, {
@@ -52,10 +65,10 @@ function Controls.tabPanels(id, parent, args)
         return panel
     end
 
-    if args.tabNames == nil then
-        args.tabNames = Ref({})
+    if args.params.tabNames == nil then
+        args.params.tabNames = Ref({})
     end
-    args.tabNames:use(id .. "-tabNames", function(_, v)
+    args.params.tabNames:use(id .. "-tabNames", function(_, v)
         -- TODO ineffective
         for _, name in ipairs(v) do
             if panels[name] == nil then
@@ -63,8 +76,8 @@ function Controls.tabPanels(id, parent, args)
             end
         end
     end)
-    result.tabNames = args.tabNames
 
-    result.panels = panels
+    result.children.panels = panels
+
     return result
 end

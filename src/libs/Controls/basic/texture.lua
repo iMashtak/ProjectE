@@ -2,24 +2,33 @@
 --* use ../ref.lua
 --* use ./setupControl.lua
 
----@class Texture : Control
----@field handlers {
----    onMouseDown: Ref<OnMouseDownFun?>?,
----    onMouseUp: Ref<OnMouseUpFun?>?,
----}
+---@class Texture : Element
+---@field params TextureParams
+---@field handlers TextureHandlers
+---@field children TextureChildren
+
+---@class TextureParams : ControlParams
 ---@field color Ref<ColorSetting>
 ---@field texture Ref<string>
+
+---@class TextureHandlers : ControlHandlers
+
+---@class TextureChildren
+
+---@class TextureParamsArgs : ControlParamsArgs
+---@field color Ref<ColorSetting>?
+---@field texture Ref<string>?
+
+---@class TextureEventsArgs : ControlEventsArgs
+
+---@class TextureSlotsArgs
 
 ---@param id string
 ---@param parent Element
 ---@param args {
----    anchors: Ref<AnchorSetting[]>?,
----    hidden: Ref<boolean>?,
----    height: Ref<integer?>?,
----    mouseEnabled: Ref<boolean>?,
----    width: Ref<integer?>?,
----    color: Ref<ColorSetting>?,
----    texture: Ref<string>?,
+---    params: TextureParamsArgs?,
+---    events: TextureEventsArgs?,
+---    slots: TextureSlotsArgs?,
 ---}
 ---@return Texture
 ---@nodiscard
@@ -27,41 +36,27 @@ function Controls.texture(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_TEXTURE)
     local result = Controls.setupControl(id, e, args) --[[@as Texture]]
 
-    if args.color == nil then
-        args.color = Ref(nil)
-        args.color:use(id .. "-color", function(_, v)
+    if args.params.color == nil then
+        args.params.color = Ref(nil)
+        args.params.color:use(id .. "-color", function(_, v)
             e:SetColor(v.r, v.g, v.b, v.a)
         end, true)
     else
-        args.color:use(id .. "-color", function(_, v)
+        args.params.color:use(id .. "-color", function(_, v)
             e:SetColor(v.r, v.g, v.b, v.a)
         end)
     end
-    result.color = args.color
 
-    if args.texture == nil then
-        args.texture = Ref(nil)
-        args.texture:use(id .. "-texture", function(_, v)
+    if args.params.texture == nil then
+        args.params.texture = Ref(nil)
+        args.params.texture:use(id .. "-texture", function(_, v)
             e:SetTexture(v)
         end, true)
     else
-        args.texture:use(id .. "-texture", function(_, v)
+        args.params.texture:use(id .. "-texture", function(_, v)
             e:SetTexture(v)
         end)
     end
-    result.texture = args.texture
-
-    local handlers = {
-        onMouseDown = Ref(nil),
-        onMouseUp = Ref(nil)
-    }
-    handlers.onMouseDown:use(id .. "-handlers-onMouseDown", function(_, v)
-        e:SetHandler("OnMouseDown", v)
-    end)
-    handlers.onMouseUp:use(id .. "-handlers-onMouseUp", function(_, v)
-        e:SetHandler("OnMouseUp", v)
-    end)
-    result.handlers = handlers
 
     return result
 end

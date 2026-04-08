@@ -2,74 +2,113 @@
 --* use ../ref.lua
 
 ---@class Control : Element
+---@field params ControlParams
+---@field handlers ControlHandlers
+---@field children table
+
+---@class ControlParams
 ---@field anchors Ref<AnchorSetting[]>
----@field hidden Ref<boolean>
 ---@field height Ref<integer?>
+---@field hidden Ref<boolean>
 ---@field mouseEnabled Ref<boolean>
 ---@field width Ref<integer?>
+
+---@class ControlHandlers
+---@field onMouseDown Handlers<OnMouseDownFun>
+---@field onMouseUp Handlers<OnMouseUpFun>
+
+---@class ControlParamsArgs
+---@field anchors Ref<AnchorSetting[]>?
+---@field height Ref<integer?>?
+---@field hidden Ref<boolean>?
+---@field mouseEnabled Ref<boolean>?
+---@field width Ref<integer?>?
+
+---@class ControlEventsArgs
+---@field onMouseDown Ref<OnMouseDownFun>|Events<OnMouseDownFun>|nil
+---@field onMouseUp Ref<OnMouseUpFun>|Events<OnMouseUpFun>|nil
 
 ---@param id string
 ---@param e any
 ---@param args {
----    anchors: Ref<AnchorSetting[]>?,
----    hidden: Ref<boolean>?,
----    height: Ref<integer?>?,
----    mouseEnabled: Ref<boolean>?,
----    width: Ref<integer?>?,
+---    params: ControlParamsArgs?,
+---    events: ControlEventsArgs?,
+---    slots: table?,
 ---}
 ---@return Control
 function Controls.setupControl(id, e, args)
-    if args.anchors == nil then
-        args.anchors = Ref({})
+    if args.params == nil then
+        args.params = {}
     end
-    args.anchors:use(id .. "-anchors", function(_, v)
+    if args.events == nil then
+        args.events = {}
+    end
+    if args.slots == nil then
+        args.slots = {}
+    end
+
+    if args.params.anchors == nil then
+        args.params.anchors = Ref({})
+    end
+    args.params.anchors:use(id .. "-anchors", function(_, v)
         e:ClearAnchors()
         for _, anchor in ipairs(v) do
             e:SetAnchor(anchor.point, anchor.target, anchor.relativePoint, anchor.offsetX, anchor.offsetY)
         end
     end)
 
-    if args.hidden == nil then
-        args.hidden = Ref(true)
+    if args.params.height == nil then
+        args.params.height = Ref(nil)
+        args.params.height:use(id .. "-height", function(_, v)
+            e:SetHeight(v)
+        end, true)
+    else
+        args.params.height:use(id .. "-height", function(_, v)
+            e:SetHeight(v)
+        end)
     end
-    args.hidden:use(id .. "-hidden", function(_, v)
+
+    if args.params.hidden == nil then
+        args.params.hidden = Ref(true)
+    end
+    args.params.hidden:use(id .. "-hidden", function(_, v)
         e:SetHidden(v)
     end)
 
-    if args.height == nil then
-        args.height = Ref(nil)
-        args.height:use(id .. "-height", function(_, v)
-            e:SetHeight(v)
-        end, true)
-    else
-        args.height:use(id .. "-height", function(_, v)
-            e:SetHeight(v)
-        end)
+    if args.params.mouseEnabled == nil then
+        args.params.mouseEnabled = Ref(false)
     end
-
-    if args.mouseEnabled == nil then
-        args.mouseEnabled = Ref(false)
-    end
-    args.mouseEnabled:use(id .. "-mouseEnabled", function(_, v)
+    args.params.mouseEnabled:use(id .. "-mouseEnabled", function(_, v)
         e:SetMouseEnabled(v)
     end)
 
-    if args.width == nil then
-        args.width = Ref(nil)
-        args.width:use(id .. "-width", function(_, v)
+    if args.params.width == nil then
+        args.params.width = Ref(nil)
+        args.params.width:use(id .. "-width", function(_, v)
             e:SetWidth(v)
         end, true)
     else
-        args.width:use(id .. "-width", function(_, v)
+        args.params.width:use(id .. "-width", function(_, v)
             e:SetWidth(v)
         end)
     end
 
-    return {
+    local result = {
         element = e,
-        anchors = args.anchors,
-        hidden = args.hidden,
-        height = args.height,
-        width = args.width,
+        params = args.params,
+        handlers = {},
+        children = {},
     }
+
+    local hook = function(event)
+        return function(f, name, order, target)
+            e:SetHandler(event, f, name, order, target)
+        end
+    end
+
+
+    result.handlers.onMouseDown = MakeHandlers(args.events.onMouseDown, hook("OnMouseDown"))
+    result.handlers.onMouseUp = MakeHandlers(args.events.onMouseUp, hook("OnMouseUp"))
+
+    return result
 end
