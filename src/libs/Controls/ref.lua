@@ -1,4 +1,5 @@
 ---@class Ref<T>
+---@field isRef boolean
 ---@field use fun(self: Ref<T>, id: string, hook: fun(old: T, new: T), lazy: boolean?)
 ---@field set fun(self: Ref<T>, v: T)
 ---@field get fun(self: Ref<T>): T
@@ -11,7 +12,9 @@
 function Ref(init)
     local value = init
     local hooks = {}
-    local self = {}
+    local self = {
+        isRef = true
+    }
 
     function self:use(id, hook, lazy)
         if lazy == nil or not lazy then
@@ -48,7 +51,9 @@ function RefC(refId, closure, initF)
     local f = initF
     local current = nil
     local hooks = {}
-    local self = {}
+    local self = {
+        isRef = true
+    }
 
     local function collect()
         local args = {}

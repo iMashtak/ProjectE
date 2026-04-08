@@ -3,7 +3,6 @@
 --* use /libs/Controls/ref.lua
 --* use /libs/Logging/log.lua
 --* use /libs/Controls/basic/label.lua
---* use /libs/Controls/composite/checkbox.lua
 --* use /libs/Controls/composite/table.lua
 
 local logger = Logger("/extensions/Currency/main.lua")
@@ -66,12 +65,14 @@ local function InitializeMoney(vars, characterId, parent)
         return result
     end
     local money = Controls.label("E_CURRENCY_MONEY", parent, {
-        text = Ref(moneyText()),
-        mouseEnabled = Ref(true)
+        params = {
+            text = Ref(moneyText()),
+            mouseEnabled = Ref(true)
+        }
     })
     EVENT_MANAGER:RegisterForEvent("E_CURRENCY_EVENT_MONEY_UPDATE", EVENT_MONEY_UPDATE, function(_, new, _, _)
         vars.Currency.amounts[characterId].money = new
-        money.text:set(moneyText())
+        money.params.text:set(moneyText())
     end)
     money.element:SetHandler("OnMouseEnter", function(control)
         ZO_Tooltips_ShowTextTooltip(control, TOP, moneyTooltipText())
@@ -114,13 +115,15 @@ local function InitializeTelvar(vars, characterId, parent)
         return result
     end
     local telvar = Controls.label("E_CURRENCY_TELVAR", parent, {
-        text = Ref(telvarText()),
-        mouseEnabled = Ref(true)
+        params = {
+            text = Ref(telvarText()),
+            mouseEnabled = Ref(true)
+        }
     })
     EVENT_MANAGER:RegisterForEvent("E_CURRENCY_EVENT_TELVAR_STONE_UPDATE", EVENT_TELVAR_STONE_UPDATE,
         function(_, new, _, _)
             vars.Currency.amounts[characterId].telvar = new
-            telvar.text:set(telvarText())
+            telvar.params.text:set(telvarText())
         end)
     telvar.element:SetHandler("OnMouseEnter", function(control)
         ZO_Tooltips_ShowTextTooltip(control, TOP, telvarTooltipText())
@@ -131,6 +134,14 @@ local function InitializeTelvar(vars, characterId, parent)
     return telvar
 end
 
+---@param vars any
+---@param initialPoint any
+---@param target any
+---@param initialRelativePoint any
+---@param initialOffsetX any
+---@param initialOffsetY any
+---@param money Label
+---@param telvar Label
 local function PositionCurrencies(
     vars, initialPoint, target, initialRelativePoint, initialOffsetX, initialOffsetY,
     money, telvar
@@ -153,15 +164,15 @@ local function PositionCurrencies(
             offsetY = 0
         end
         if item == "money" then
-            money.hidden:set(false)
-            money.anchors:set({
+            money.params.hidden:set(false)
+            money.params.anchors:set({
                 { point = point, target = previous.element, relativePoint = relativePoint, offsetX = offsetX, offsetY = offsetY },
             })
             previous = money
         end
         if item == "telvar" then
-            telvar.hidden:set(false)
-            telvar.anchors:set({
+            telvar.params.hidden:set(false)
+            telvar.params.anchors:set({
                 { point = point, target = previous.element, relativePoint = relativePoint, offsetX = offsetX, offsetY = offsetY },
             })
             previous = telvar
@@ -177,11 +188,13 @@ local function InitializeExtension(vars)
         vars.Currency.amounts[characterId] = {}
     end
     local layout = Controls.layout("E_CURRENCY_LAYOUT", {
-        hidden = Ref(not vars.Currency.settings.enabled)
+        params = {
+            hidden = Ref(not vars.Currency.settings.enabled)
+        }
     })
-    layout.element:SetHandler("OnShow", function ()
+    layout.element:SetHandler("OnShow", function()
         if not vars.Currency.settings.enabled then
-            layout.hidden:set(true)
+            layout.params.hidden:set(true)
         end
     end)
 
@@ -214,6 +227,7 @@ local function InitializeSettings(vars, parent)
     local table = Controls.Dsl.table
     local row = Controls.Dsl.row
     local column = Controls.Dsl.column
+    local label = Controls.Dsl.label
     local tableF = table(
         {
             params = {
@@ -225,51 +239,37 @@ local function InitializeSettings(vars, parent)
             }
         },
         row({},
-            column({}, function(id, p)
-                return Controls.label(id, p, {
-                    hidden = Ref(false),
-                    anchors = Ref({
-                        { point = TOPLEFT,     target = p.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
-                        { point = BOTTOMRIGHT, target = p.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
-                    }),
-                    text = Ref("Currency Extension")
-                })
-            end)
+            column({}, label({}, "Currency Extension"))
         ),
         row({},
-            column({}, function(id, p)
-                return Controls.label(id, p, {
-                    hidden = Ref(false),
-                    anchors = Ref({
-                        { point = TOPLEFT,     target = p.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
-                        { point = BOTTOMRIGHT, target = p.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
-                    }),
-                    text = Ref("Enabled")
-                })
-            end),
+            column({}, label({}, "Enabled")),
             column({}, function(id, p)
                 local state = Ref(vars.Currency.settings.enabled)
-                state:use(id .. "-state", function (_, v)
+                state:use(id .. "-state", function(_, v)
                     vars.Currency.settings.enabled = v
                 end)
                 local checkbox = Controls.label(id, p, {
-                    hidden = Ref(false),
-                    anchors = Ref({
-                        { point = TOPLEFT,     target = p.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
-                        { point = BOTTOMRIGHT, target = p.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
-                    }),
-                    text = RefC(id .. "-text", { state }, function(ok)
-                        if ok then
-                            return zo_iconFormat(Textures.icons.checkbox.checked, 23, 23)
-                        else
-                            return zo_iconFormat(Textures.icons.checkbox.unchecked, 23, 23)
-                        end
-                    end),
-                    mouseEnabled = Ref(true)
+                    params = {
+                        hidden = Ref(false),
+                        anchors = Ref({
+                            { point = TOPLEFT,     target = p.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
+                            { point = BOTTOMRIGHT, target = p.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
+                        }),
+                        text = RefC(id .. "-text", { state }, function(ok)
+                            if ok then
+                                return zo_iconFormat(Textures.icons.checkbox.checked, 23, 23)
+                            else
+                                return zo_iconFormat(Textures.icons.checkbox.unchecked, 23, 23)
+                            end
+                        end),
+                        mouseEnabled = Ref(true),
+                    },
+                    events = {
+                        onMouseDown = Ref(function(self, button, ctrl, alt, shift, command)
+                            state:set(not state:get())
+                        end)
+                    }
                 })
-                checkbox.handlers.onMouseDown:set(function(self, button, ctrl, alt, shift, command)
-                    state:set(not state:get())
-                end)
                 return checkbox
             end)
         )

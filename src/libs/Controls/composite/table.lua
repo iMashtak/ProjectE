@@ -12,13 +12,14 @@ local logger = Logger("/libs/Controls/composite/table.lua")
 
 ---@class TableParams : ControlParams
 
----@class TableHandlers
+---@class TableHandlers : ControlHandlers
 
 ---@class TableChildren
+---@field rows Row[]
 
 ---@class TableParamsArgs : ControlParamsArgs
 
----@class TableEventsArgs
+---@class TableEventsArgs : ControlEventsArgs
 
 ---@class TableSlotsArgs
 ---@field rows fun(parent: Element): Row[]
@@ -26,17 +27,17 @@ local logger = Logger("/libs/Controls/composite/table.lua")
 ---@param id string
 ---@param parent Element
 ---@param args {
----    params: TableParamsArgs,
----    events: TableEventsArgs,
----    slots: TableSlotsArgs,
+---    params: TableParamsArgs?,
+---    events: TableEventsArgs?,
+---    slots: TableSlotsArgs?,
 ---}
 ---@return Table
 function Controls.table(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
-    local ec = Controls.setupControl(id, e, args.params)
+    local result = Controls.setupControl(id, e, args) --[[@as Table]]
 
-    local rows = args.slots.rows(ec)
-    local previous = ec --[[@as Element]]
+    local rows = args.slots.rows(result)
+    local previous = result --[[@as Element]]
     for i, row in ipairs(rows) do
         row.children.columns[1].params.height:use(id .. "-firstColumnHeight", function (_, v)
             row.params.height:set(v)
@@ -52,21 +53,8 @@ function Controls.table(id, parent, args)
         end
         previous = row
     end
+    result.children.rows = rows
 
-    local result = {
-        element = e,
-        params = {
-            anchors = ec.anchors,
-            height = ec.height,
-            hidden = ec.hidden,
-            mouseEnabled = ec.mouseEnabled,
-            width = ec.width,
-        },
-        handlers = {},
-        children = {
-            rows = rows
-        }
-    } --[[@as Table]]
     return result
 end
 
@@ -79,14 +67,14 @@ end
 
 ---@class RowParams : ControlParams
 
----@class RowHandlers
+---@class RowHandlers : ControlHandlers
 
 ---@class RowChildren
 ---@field columns Column[]
 
 ---@class RowParamsArgs : ControlParamsArgs
 
----@class RowEventsArgs
+---@class RowEventsArgs : ControlEventsArgs
 
 ---@class RowSlotsArgs
 ---@field columns fun(parent: Element): Column[]
@@ -94,16 +82,16 @@ end
 ---@param id string
 ---@param parent Element
 ---@param args {
----    params: RowParamsArgs,
----    events: RowEventsArgs,
----    slots: RowSlotsArgs,
+---    params: RowParamsArgs?,
+---    events: RowEventsArgs?,
+---    slots: RowSlotsArgs?,
 ---}
 ---@return Row
 function Controls.row(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
-    local ec = Controls.setupControl(id, e, args.params)
+    local result = Controls.setupControl(id, e, args) --[[@as Row]]
 
-    local columns = args.slots.columns(ec)
+    local columns = args.slots.columns(result)
 
     local columnHeights = {}
     for _, column in ipairs(columns) do
@@ -113,14 +101,14 @@ function Controls.row(id, parent, args)
         return math.max(...)
     end)
     maxHeight:use(id .. "-height", function (_, v)
-        ec.height:set(v)
+        result.params.height:set(v)
     end)
 
-    local columnWidth = RefC(id .. "-width", { ec.width }, function(width)
+    local columnWidth = RefC(id .. "-width", { result.params.width }, function(width)
         return width / #columns
     end)
 
-    local previous = ec --[[@as Element]]
+    local previous = result --[[@as Element]]
     for i, column in ipairs(columns) do
         columnWidth:use(id .. "-columnWidth-" .. tostring(i), function(_, v)
             column.params.width:set(v)
@@ -136,21 +124,8 @@ function Controls.row(id, parent, args)
         end
         previous = column
     end
+    result.children.columns = columns
 
-    local result = {
-        element = e,
-        params = {
-            anchors = ec.anchors,
-            height = ec.height,
-            hidden = ec.hidden,
-            mouseEnabled = ec.mouseEnabled,
-            width = ec.width,
-        },
-        handlers = {},
-        children = {
-            columns = columns
-        }
-    } --[[@as Row]]
     return result
 end
 
@@ -163,14 +138,14 @@ end
 
 ---@class ColumnParams : ControlParams
 
----@class ColumnHandlers
+---@class ColumnHandlers : ControlHandlers
 
 ---@class ColumnChildren
 ---@field content Element
 
 ---@class ColumnParamsArgs : ControlParamsArgs
 
----@class ColumnEventsArgs
+---@class ColumnEventsArgs : ControlEventsArgs
 
 ---@class ColumnSlotsArgs
 ---@field content fun(parent: Element): Element
@@ -178,43 +153,31 @@ end
 ---@param id string
 ---@param parent Element
 ---@param args {
----    params: ColumnParamsArgs,
----    events: ColumnEventsArgs,
----    slots: ColumnSlotsArgs,
+---    params: ColumnParamsArgs?,
+---    events: ColumnEventsArgs?,
+---    slots: ColumnSlotsArgs?,
 ---}
 ---@return Column
 function Controls.column(id, parent, args)
     local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_CONTROL)
-    local ec = Controls.setupControl(id, e, args.params)
+    local result = Controls.setupControl(id, e, args) --[[@as Column]]
 
-    local content = args.slots.content(ec)
+    local content = args.slots.content(result)
     content.element:ClearAnchors()
     content.element:SetAnchor(TOPLEFT, e, TOPLEFT, 0, 0)
-    ec.height:set(content.element:GetHeight())
+    result.params.height:set(content.element:GetHeight())
 
-    local result = {
-        element = e,
-        params = {
-            anchors = ec.anchors,
-            height = ec.height,
-            hidden = ec.hidden,
-            mouseEnabled = ec.mouseEnabled,
-            width = ec.width,
-        },
-        handlers = {},
-        children = {
-            content = content
-        }
-    } --[[@as Column]]
+    result.children.content = content
+
     return result
 end
 
 -- DSL --
 
 ---@param controlArgs {
----    params: TableParamsArgs,
----    events: TableEventsArgs,
----    slots: TableSlotsArgs,
+---    params: TableParamsArgs?,
+---    events: TableEventsArgs?,
+---    slots: TableSlotsArgs?,
 ---}
 ---@param ... fun(id: string, p: Element): Row
 ---@return function
@@ -239,9 +202,9 @@ function Controls.Dsl.table(controlArgs, ...)
 end
 
 ---@param controlArgs {
----    params: RowParamsArgs,
----    events: RowEventsArgs,
----    slots: RowSlotsArgs,
+---    params: RowParamsArgs?,
+---    events: RowEventsArgs?,
+---    slots: RowSlotsArgs?,
 ---}
 ---@param ... fun(id: string, p: Element): Column
 ---@return function
@@ -255,7 +218,7 @@ function Controls.Dsl.row(controlArgs, ...)
             controlArgs.params.hidden = Ref(false)
         end
         if controlArgs.params.width == nil then
-            controlArgs.params.width = parent.width --TODO parent.params.width
+            controlArgs.params.width = parent.params.width
         end
         if controlArgs.slots == nil then
             ---@diagnostic disable-next-line: missing-fields
@@ -275,9 +238,9 @@ function Controls.Dsl.row(controlArgs, ...)
 end
 
 ---@param controlArgs {
----    params: ColumnParamsArgs,
----    events: ColumnEventsArgs,
----    slots: ColumnSlotsArgs,
+---    params: ColumnParamsArgs?,
+---    events: ColumnEventsArgs?,
+---    slots: ColumnSlotsArgs?,
 ---}
 ---@param slot fun(id: string, p: Element): Element
 ---@return function

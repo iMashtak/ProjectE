@@ -6,6 +6,7 @@
 ## SavedVariables: E_VARS
 
 src\extensions\Crux\main.xml
+src\libs\root.lua
 src\libs\Controls\main.lua
 src\libs\Controls\ref.lua
 src\libs\Controls\basic\setupControl.lua
@@ -14,7 +15,6 @@ src\libs\Controls\basic\label.lua
 src\libs\Controls\basic\layout.lua
 src\libs\Controls\basic\texture.lua
 src\libs\Controls\basic\button.lua
-src\libs\Controls\composite\checkbox.lua
 src\libs\Controls\composite\scrollArea.lua
 src\libs\Controls\composite\scrollList.lua
 src\libs\Controls\composite\tabPanels.lua
@@ -25,4 +25,3 @@ src\extensions\Crux\main.lua
 src\libs\Controls\composite\table.lua
 src\extensions\Currency\main.lua
 src\tests\ControlsSample\chiefControlsSample.lua
-src\tests\ControlsSample\test.lua

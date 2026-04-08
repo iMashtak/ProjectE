@@ -26,7 +26,7 @@ local function Initialize(_, addOnName)
     end
     EVENT_MANAGER:UnregisterForEvent("E_EXTENSIONS", EVENT_ADD_ON_LOADED)
 
-    SLASH_COMMANDS["/elog"] = function ()
+    SLASH_COMMANDS["/elog"] = function()
         for i, message in ipairs(L) do
             d(i, message)
         end
@@ -53,44 +53,52 @@ local function Initialize(_, addOnName)
     table.sort(tabNames)
 
     local layout = Controls.layout("E_EXTENSIONS_SETTINGS_LAYOUT", {
-        anchors = Ref({
-            { point = LEFT, target = GuiRoot, relativePoint = LEFT, offsetX = 300, offsetY = 0 },
-        }),
-        height = Ref(1000),
-        width = Ref(900),
+        params = {
+            anchors = Ref({
+                { point = LEFT, target = GuiRoot, relativePoint = LEFT, offsetX = 300, offsetY = 0 },
+            }),
+            height = Ref(600),
+            width = Ref(900),
+        }
     })
     local bg = Controls.backdrop("E_EXTENSIONS_SETTINGS_BG", layout, {
-        hidden = Ref(false),
-        anchors = Ref({
-            { point = TOPLEFT,     target = layout.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
-            { point = BOTTOMRIGHT, target = layout.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
-        }),
-        edgeSettings = Ref({ file = Textures.bg.chatEdge, width = 1, height = 1, size = 1, padding = 0 })
+        params = {
+            hidden = Ref(false),
+            anchors = Ref({
+                { point = TOPLEFT,     target = layout.element, relativePoint = TOPLEFT,     offsetX = 0, offsetY = 0 },
+                { point = BOTTOMRIGHT, target = layout.element, relativePoint = BOTTOMRIGHT, offsetX = 0, offsetY = 0 },
+            }),
+            edgeSettings = Ref({ file = Textures.bg.chatEdge, width = 1, height = 1, size = 1, padding = 0 })
+        }
     })
     local tabs = Controls.tabs("E_EXTENSIONS_SETTINGS_TABS", bg, {
-        hidden = Ref(false),
-        height = layout.height,
-        width = RefC("E_EXTENSIONS_SETTINGS_TABS_WIDTH", { layout.width }, function(width)
-            return width / 3
-        end),
-        anchors = Ref({
-            { point = TOPLEFT, target = bg.element, relativePoint = TOPLEFT, offsetX = 0, offsetY = 0 }
-        }),
-        tabNames = Ref(tabNames),
+        params = {
+            hidden = Ref(false),
+            height = layout.params.height,
+            width = RefC("E_EXTENSIONS_SETTINGS_TABS_WIDTH", { layout.params.width }, function(width)
+                return width / 3
+            end),
+            anchors = Ref({
+                { point = TOPLEFT, target = bg.element, relativePoint = TOPLEFT, offsetX = 0, offsetY = 0 }
+            }),
+            tabNames = Ref(tabNames),
+        }
     })
     local panels = Controls.tabPanels("E_EXTENSIONS_SETTINGS_TAB_PANELS", bg, {
-        hidden = Ref(false),
-        height = layout.height,
-        width = RefC("E_EXTENSIONS_SETTINGS_TAB_PANELS_WIDTH", { layout.width }, function(width)
-            return width / 3 * 2
-        end),
-        anchors = Ref({
-            { point = TOPLEFT, target = tabs.element, relativePoint = TOPRIGHT, offsetX = 0, offsetY = 0 }
-        }),
-        state = tabs.state,
-        tabNames = tabs.tabNames,
+        params = {
+            hidden = Ref(false),
+            height = layout.params.height,
+            width = RefC("E_EXTENSIONS_SETTINGS_TAB_PANELS_WIDTH", { layout.params.width }, function(width)
+                return width / 3 * 2
+            end),
+            anchors = Ref({
+                { point = TOPLEFT, target = tabs.element, relativePoint = TOPRIGHT, offsetX = 0, offsetY = 0 }
+            }),
+            state = tabs.params.state,
+            tabNames = tabs.params.tabNames,
+        }
     })
-    tabs.state:set(tabs.state:get() --[[@as string]])
+    tabs.params.state:set(tabs.params.state:get())
     local scene = ZO_FadeSceneFragment:New(layout.element, true, 100)
     scene:RegisterCallback("StateChange", function(_, newState)
         if (newState == SCENE_FRAGMENT_SHOWN) then
@@ -111,7 +119,7 @@ local function Initialize(_, addOnName)
     })
 
     for _, ext in ipairs(Extensions) do
-        ext.initializeSettings(vars, panels.panels[ext.name].children.inner)
+        ext.initializeSettings(vars, panels.children.panels[ext.name].children.inner)
     end
 end
 

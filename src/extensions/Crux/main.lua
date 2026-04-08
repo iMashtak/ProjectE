@@ -1,8 +1,8 @@
 --* use ./main.xml
 --* use ../host.lua
+--* use /libs/Logging/log.lua
 --* use /libs/Controls/main.lua
 --* use /libs/Controls/ref.lua
---* use /libs/Logging/log.lua
 --* use /libs/Controls/basic/layout.lua
 --* use /libs/Controls/basic/texture.lua
 
@@ -15,24 +15,24 @@ local CRUX_ABILITY_ID = 184220
 ---@param stackCount integer
 local function SetCruxes(cruxLeft, cruxRight, cruxUp, stackCount)
     if stackCount == 0 then
-        cruxLeft.hidden:set(true)
-        cruxRight.hidden:set(true)
-        cruxUp.hidden:set(true)
+        cruxLeft.params.hidden:set(true)
+        cruxRight.params.hidden:set(true)
+        cruxUp.params.hidden:set(true)
     end
     if stackCount == 1 then
-        cruxLeft.hidden:set(false)
-        cruxRight.hidden:set(true)
-        cruxUp.hidden:set(true)
+        cruxLeft.params.hidden:set(false)
+        cruxRight.params.hidden:set(true)
+        cruxUp.params.hidden:set(true)
     end
     if stackCount == 2 then
-        cruxLeft.hidden:set(false)
-        cruxRight.hidden:set(false)
-        cruxUp.hidden:set(true)
+        cruxLeft.params.hidden:set(false)
+        cruxRight.params.hidden:set(false)
+        cruxUp.params.hidden:set(true)
     end
     if stackCount == 3 then
-        cruxLeft.hidden:set(false)
-        cruxRight.hidden:set(false)
-        cruxUp.hidden:set(false)
+        cruxLeft.params.hidden:set(false)
+        cruxRight.params.hidden:set(false)
+        cruxUp.params.hidden:set(false)
     end
 end
 
@@ -74,29 +74,33 @@ end
 local function CreateCrux(layout, suffix, position)
     local cruxColor = Ref(Colors["crux"])
     local crux = Controls.texture("E_CRUX_TEXTURE_" .. suffix, layout, {
-        anchors = Ref({
-            { point = position, target = layout.element, relativePoint = position, offsetX = 0, offsetY = 0 }
-        }),
-        height = Ref(32),
-        width = Ref(32),
-        texture = Ref(Textures.effects.crux),
-        color = cruxColor,
+        params = {
+            anchors = Ref({
+                { point = position, target = layout.element, relativePoint = position, offsetX = 0, offsetY = 0 }
+            }),
+            height = Ref(32),
+            width = Ref(32),
+            texture = Ref(Textures.effects.crux),
+            color = cruxColor,
+        }
     })
     local cruxSmoke = Controls.texture("E_CRUX_TEXTURE_SMOKE_" .. suffix, crux, {
-        hidden = Ref(false),
-        anchors = Ref({
-            { point = CENTER, target = crux.element, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
-        }),
-        height = Ref(96),
-        width = Ref(96),
-        texture = Ref("/art/fx/texture/smoke_billowy_6x6.dds"),
-        color = RefC(
-            "E_CRUX_TEXTURE_SMOKE_" .. suffix,
-            { cruxColor },
-            function(color)
-                return { r = color.r, g = color.g, b = color.b, a = 1 }
-            end
-        ),
+        params = {
+            hidden = Ref(false),
+            anchors = Ref({
+                { point = CENTER, target = crux.element, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
+            }),
+            height = Ref(96),
+            width = Ref(96),
+            texture = Ref("/art/fx/texture/smoke_billowy_6x6.dds"),
+            color = RefC(
+                "E_CRUX_TEXTURE_SMOKE_" .. suffix,
+                { cruxColor },
+                function(color)
+                    return { r = color.r, g = color.g, b = color.b, a = 1 }
+                end
+            ),
+        }
     })
     local cruxSmokeTimeline = ANIMATION_MANAGER:CreateTimelineFromVirtual("E_CRUX_SMOKE_ANIMATION", cruxSmoke.element)
     crux.element:SetHandler("OnHidden", function()
@@ -106,14 +110,16 @@ local function CreateCrux(layout, suffix, position)
         cruxSmokeTimeline:PlayFromStart()
     end)
     local cruxGlow = Controls.texture("E_CRUX_TEXTURE_GLOW_" .. suffix, crux, {
-        hidden = Ref(false),
-        anchors = Ref({
-            { point = CENTER, target = crux.element, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
-        }),
-        height = Ref(48),
-        width = Ref(48),
-        texture = Ref("/art/fx/texture/lensflares_02_2x2.dds"),
-        color = cruxColor,
+        params = {
+            hidden = Ref(false),
+            anchors = Ref({
+                { point = CENTER, target = crux.element, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
+            }),
+            height = Ref(48),
+            width = Ref(48),
+            texture = Ref("/art/fx/texture/lensflares_02_2x2.dds"),
+            color = cruxColor,
+        }
     })
     cruxGlow.element:SetTextureCoords(0, 0.5, 0, 0.5)
     return crux
@@ -121,12 +127,14 @@ end
 
 local function InitializeExtension(vars)
     local layout = Controls.layout("E_CRUX_LAYOUT", {
-        hidden = Ref(false),
-        anchors = Ref({
-            { point = CENTER, target = GuiRoot, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
-        }),
-        height = Ref(128),
-        width = Ref(128),
+        params = {
+            hidden = Ref(false),
+            anchors = Ref({
+                { point = CENTER, target = GuiRoot, relativePoint = CENTER, offsetX = 0, offsetY = 0 }
+            }),
+            height = Ref(128),
+            width = Ref(128),
+        }
     })
     local cruxLeft = CreateCrux(layout, "LEFT", LEFT)
     local cruxRight = CreateCrux(layout, "RIGHT", RIGHT)
@@ -170,20 +178,6 @@ end
 
 ---@param parent Element
 local function InitializeSettings(vars, parent)
-    local layout = ControlsRegistry["E_CRUX_LAYOUT"] --[[@as Layout]]
-    local enabled = Controls.checkbox("E_CRUX_SETTINGS_ENABLED", parent, {
-        hidden = Ref(false),
-        text = Ref("enabled"),
-        state = Ref(true),
-        anchors = Ref({
-            { point = TOPLEFT,  target = parent.element, relativePoint = TOPLEFT,  offsetX = 0, offsetY = 0 },
-            { point = TOPRIGHT, target = parent.element, relativePoint = TOPRIGHT, offsetX = 0, offsetY = 0 },
-        }),
-        height = Ref(32),
-    })
-    enabled.state:use("E_CRUX_SETTINGS_ENABLED_STATE", function(_, v)
-        layout.hidden:set(not v)
-    end)
 end
 
 RegisterExtension("Crux", InitializeExtension, InitializeSettings)

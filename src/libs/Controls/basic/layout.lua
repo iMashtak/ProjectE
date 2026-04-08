@@ -2,15 +2,28 @@
 --* use ../ref.lua
 --* use ./setupControl.lua
 
----@class Layout : Control
+---@class Layout : Element
+---@field params LayoutParams
+---@field handlers LayoutHandlers
+---@field children LayoutChildren
+
+---@class LayoutParams : ControlParams
+
+---@class LayoutHandlers : ControlHandlers
+
+---@class LayoutChildren
+
+---@class LayoutParamsArgs : ControlParamsArgs
+
+---@class LayoutEventsArgs : ControlEventsArgs
+
+---@class LayoutSlotsArgs
 
 ---@param id string
 ---@param args {
----    anchors: Ref<AnchorSetting[]>?,
----    hidden: Ref<boolean>?,
----    height: Ref<integer?>?,
----    mouseEnabled: Ref<boolean>?,
----    width: Ref<integer?>?,
+---    params: LayoutParamsArgs?,
+---    events: LayoutEventsArgs?,
+---    slots: LayoutSlotsArgs?,
 ---}
 ---@return Layout
 ---@nodiscard
