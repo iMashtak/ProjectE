@@ -30,6 +30,5 @@
 function Controls.layout(id, args)
     local e = WINDOW_MANAGER:CreateTopLevelWindow(id)
     local result = Controls.setupControl(id, e, args) --[[@as Layout]]
-    ControlsRegistry[id] = result
     return result
 end

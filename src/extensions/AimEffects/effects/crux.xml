@@ -1,10 +1,10 @@
 <GuiXml
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../schema.xsd"
+    xsi:noNamespaceSchemaLocation="../../../schema.xsd"
 >
     <Animations>
         <AnimationTimeline
-            name="E_CRUX_SMOKE_ANIMATION"
+            name="E_AIM_EFFECTS_CRUX_SMOKE_ANIMATION"
             playbackType="LOOP"
             loopCount="LOOP_INDEFINITELY"
         >

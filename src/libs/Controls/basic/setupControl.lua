@@ -99,13 +99,13 @@ function Controls.setupControl(id, e, args)
         handlers = {},
         children = {},
     }
+    ControlsRegistry[id] = result
 
     local hook = function(event)
         return function(f, name, order, target)
             e:SetHandler(event, f, name, order, target)
         end
     end
-
 
     result.handlers.onMouseDown = MakeHandlers(args.events.onMouseDown, hook("OnMouseDown"))
     result.handlers.onMouseUp = MakeHandlers(args.events.onMouseUp, hook("OnMouseUp"))
