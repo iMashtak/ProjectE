@@ -17,8 +17,10 @@ TOPRIGHT = TOPRIGHT
 TOP = TOP
 BOTTOMLEFT = BOTTOMLEFT
 GetControl = GetControl
+GetString = GetString
 
 CT_BACKDROP = CT_BACKDROP
+CT_EDITBOX = CT_EDITBOX
 CT_LABEL = CT_LABEL
 CT_TEXTURE = CT_TEXTURE
 CT_CONTROL = CT_CONTROL
@@ -46,13 +48,27 @@ EFFECT_RESULT_FADED = EFFECT_RESULT_FADED
 
 SCENE_FRAGMENT_SHOWN = SCENE_FRAGMENT_SHOWN
 SCENE_FRAGMENT_HIDDEN = SCENE_FRAGMENT_HIDDEN
+SCENE_SHOWING = SCENE_SHOWING
+SCENE_HIDDEN = SCENE_HIDDEN
 PushActionLayerByName = PushActionLayerByName
 RemoveActionLayerByName = RemoveActionLayerByName
+
+ZO_Scene = ZO_Scene
+FRAGMENT_GROUP = FRAGMENT_GROUP
+RIGHT_PANEL_BG_FRAGMENT = RIGHT_PANEL_BG_FRAGMENT
+ZO_SharedRightPanelBackground = ZO_SharedRightPanelBackground
+
+MAIN_MENU_KEYBOARD = MAIN_MENU_KEYBOARD
+ZO_MenuBar_AddButton = ZO_MenuBar_AddButton
+ZO_MenuBar_SelectDescriptor = ZO_MenuBar_SelectDescriptor
+ZO_MenuBar_GetSelectedDescriptor = ZO_MenuBar_GetSelectedDescriptor
+ZO_MenuBar_ClearSelection = ZO_MenuBar_ClearSelection
 
 ---@type fun(data: {id: string, name: string, callback: fun(), unselectedCallback: fun()})
 ZO_GameMenu_AddSettingPanel = ZO_GameMenu_AddSettingPanel
 ZO_FadeSceneFragment = ZO_FadeSceneFragment
 ZO_HUDFadeSceneFragment = ZO_HUDFadeSceneFragment
+ZO_CreateStringId = ZO_CreateStringId
 
 HUD_SCENE = HUD_SCENE
 HUD_UI_SCENE = HUD_UI_SCENE
@@ -86,6 +102,11 @@ ZO_ScrollList_Commit = ZO_ScrollList_Commit
 TEXT_ALIGN_LEFT = TEXT_ALIGN_LEFT
 TEXT_ALIGN_CENTER = TEXT_ALIGN_CENTER
 TEXT_WRAP_MODE_ELLIPSIS = TEXT_WRAP_MODE_ELLIPSIS
+TEXT_WRAP_MODE_TRUNCATE = TEXT_WRAP_MODE_TRUNCATE
+
+ZO_NORMAL_TEXT = ZO_NORMAL_TEXT
+ZO_HIGHLIGHT_TEXT = ZO_HIGHLIGHT_TEXT
+ZO_DISABLED_TEXT = ZO_DISABLED_TEXT
 
 GetCurrencyAmount = GetCurrencyAmount
 GetCurrencyKeyboardIcon = GetCurrencyKeyboardIcon

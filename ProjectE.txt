@@ -12,6 +12,7 @@ src\libs\Controls\main.lua
 src\libs\Controls\ref.lua
 src\libs\Controls\basic\setupControl.lua
 src\libs\Controls\basic\backdrop.lua
+src\libs\Controls\basic\control.lua
 src\libs\Controls\basic\editBox.lua
 src\libs\Controls\basic\label.lua
 src\libs\Controls\basic\layout.lua

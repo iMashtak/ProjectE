@@ -14,6 +14,7 @@
 ---@field color Ref<ColorSetting>
 ---@field multiLine Ref<boolean>
 ---@field maxLength Ref<integer?>
+---@field loseFocusOnEnter Ref<boolean>
 
 ---@alias OnTextChangedFun fun(self)
 ---@alias OnInputFun fun(self)
@@ -34,6 +35,7 @@
 ---@field color Ref<ColorSetting>?
 ---@field multiLine Ref<boolean>?
 ---@field maxLength Ref<integer?>?
+---@field loseFocusOnEnter Ref<boolean>?
 
 ---@class EditBoxEventsArgs : ControlEventsArgs
 ---@field onTextChanged Ref<OnTextChangedFun>|Events<OnTextChangedFun>|nil
@@ -62,7 +64,7 @@ function Controls.editBox(id, parent, args)
         args.params.mouseEnabled = Ref(true)
     end
 
-    local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_TEXT_INPUT)
+    local e = WINDOW_MANAGER:CreateControl(id, parent.element, CT_EDITBOX)
     local result = Controls.setupControl(id, e, args) --[[@as EditBox]]
 
     if args.params.font == nil then
@@ -113,16 +115,20 @@ function Controls.editBox(id, parent, args)
         e:SetMultiLine(v)
     end)
 
+    if args.params.loseFocusOnEnter == nil then
+        args.params.loseFocusOnEnter = Ref(true)
+    end
+
     if args.params.maxLength == nil then
         args.params.maxLength = Ref(nil)
         args.params.maxLength:use(id .. "-maxLength", function(_, v)
             if v ~= nil then
-                e:SetMaxInputLength(v)
+                e:SetMaxInputChars(v)
             end
         end, true)
     else
         args.params.maxLength:use(id .. "-maxLength", function(_, v)
-            e:SetMaxInputLength(v)
+            e:SetMaxInputChars(v)
         end)
     end
 
@@ -142,7 +148,7 @@ function Controls.editBox(id, parent, args)
         self:LoseFocus()
     end, id .. "-builtin-escape")
     e:SetHandler("OnEnter", function(self)
-        if not args.params.multiLine:get() then
+        if not args.params.multiLine:get() and args.params.loseFocusOnEnter:get() then
             self:LoseFocus()
         end
     end, id .. "-builtin-enter")
