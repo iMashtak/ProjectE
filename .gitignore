@@ -2,3 +2,7 @@
 /.vscode
 /dist.sh
 /python3.sh
+/tmp
+/venv
+/opencode.jsonc
+/AGENTS.md

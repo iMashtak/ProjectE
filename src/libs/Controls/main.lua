@@ -115,7 +115,8 @@ Textures = {
         chatEdge = "/esoui/art/chatwindow/chat_bg_edge.dds"
     },
     effects = {
-        crux = "/art/fx/texture/arcanist_trianglerune_01.dds"
+        crux = "/art/fx/texture/arcanist_trianglerune_01.dds",
+        ulfsild = "/esoui/art/icons/ability_grimoire_magesguild.dds",
     },
     plus = {
         pointplus = "/esoui/art/tutorial/pointsplus_up.dds",
@@ -131,4 +132,5 @@ Textures = {
 Colors = {
     ["black"] = { r = 0, g = 0, b = 0, a = 1 },
     ["crux"] = { r = 0.6445, g = 1, b = 0.4219, a = 1 },
+    ["ulfsild"] = { r = 0.1, g = 1, b = 1, a = 1 },
 }
