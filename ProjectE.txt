@@ -12,10 +12,11 @@ src\libs\Controls\main.lua
 src\libs\Controls\ref.lua
 src\libs\Controls\basic\setupControl.lua
 src\libs\Controls\basic\backdrop.lua
+src\libs\Controls\basic\editBox.lua
 src\libs\Controls\basic\label.lua
 src\libs\Controls\basic\layout.lua
 src\libs\Controls\basic\texture.lua
-src\libs\Controls\basic\button.lua
+src\libs\Controls\composite\button.lua
 src\libs\Controls\composite\scrollArea.lua
 src\libs\Controls\composite\scrollList.lua
 src\libs\Controls\composite\tabPanels.lua
@@ -29,4 +30,4 @@ src\extensions\AimEffects\root.lua
 src\extensions\AimEffects\effects\crux.lua
 src\extensions\AimEffects\effects\ulfsild.lua
 src\extensions\AimEffects\main.lua
-src\tests\ControlsSample\chiefControlsSample.lua
+src\extensions\Checklist\main.lua
