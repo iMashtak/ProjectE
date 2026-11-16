@@ -88,19 +88,6 @@ function Controls.editBox(id, parent, args)
         e:SetText(v)
     end)
 
-    local syncing = false
-    e:SetHandler("OnTextChanged", function(self)
-        if syncing then
-            return
-        end
-        local v = self:GetText()
-        if v ~= args.params.text:get() then
-            syncing = true
-            args.params.text:set(v)
-            syncing = false
-        end
-    end, id .. "-sync")
-
     if args.params.defaultText == nil then
         args.params.defaultText = Ref("")
     end
@@ -143,6 +130,19 @@ function Controls.editBox(id, parent, args)
     result.handlers.onEscape = MakeHandlers(args.events.onEscape, hook("OnEscape"))
     result.handlers.onFocusGained = MakeHandlers(args.events.onFocusGained, hook("OnFocusGained"))
     result.handlers.onFocusLost = MakeHandlers(args.events.onFocusLost, hook("OnFocusLost"))
+
+    local syncing = false
+    e:SetHandler("OnTextChanged", function(self)
+        if syncing then
+            return
+        end
+        local v = self:GetText()
+        if v ~= args.params.text:get() then
+            syncing = true
+            args.params.text:set(v)
+            syncing = false
+        end
+    end, id .. "-sync")
 
     e:SetHandler("OnEscape", function(self)
         self:LoseFocus()

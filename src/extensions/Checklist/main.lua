@@ -112,21 +112,24 @@ local function CreateNoteRow(panel, index)
     local item = Controls.control(baseId .. "-container", panel.area.children.inner, {
         params = {
             hidden = Ref(true),
-            height = Ref(26),
             width = Ref(495),
             anchors = Ref({})
         }
     })
-    local text = Controls.label(baseId .. "-text", item, {
+    local text = Controls.textArea(baseId .. "-text", item, {
         params = {
             hidden = Ref(false),
-            font = Ref(Fonts.game),
+            autoGrow = Ref(true),
+            maxHeight = Ref(100),
             anchors = Ref({
-                { point = TOPLEFT,     target = item.element, relativePoint = TOPLEFT,     offsetX = 26, offsetY = 0 },
-                { point = BOTTOMRIGHT, target = item.element, relativePoint = BOTTOMRIGHT, offsetX = 0,  offsetY = 0 }
+                { point = TOPLEFT,  target = item.element, relativePoint = TOPLEFT,  offsetX = 26, offsetY = 0 },
+                { point = TOPRIGHT, target = item.element, relativePoint = TOPRIGHT, offsetX = 0,  offsetY = 0 }
             })
         }
     })
+    text.params.height:use(baseId .. "-sync-height", function(_, v)
+        item.params.height:set(v)
+    end)
     local delete = Controls.label(baseId .. "-delete", item, {
         params = {
             hidden = Ref(false),
