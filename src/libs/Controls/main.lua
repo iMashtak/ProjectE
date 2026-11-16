@@ -20,6 +20,7 @@ ControlsRegistry = {}
 ---@class Handlers<T>
 ---@field get fun(self: Handlers<T>, name: string?): Ref<T>
 ---@field add fun(self: Handlers<T>, name: string, g: Ref<T>, order: any?, target: string?)
+---@field free fun(self: Handlers<T>, name: string)
 
 ---@generic T : function
 ---@param events Events<T>
@@ -64,6 +65,13 @@ function UseEvents(events, hook)
         events[name] = { f = g, order = order, target = target }
     end
 
+    function self:free(name)
+        if events[name] == nil then return end
+        local event = events[name]
+        event.f:free(name)
+        events[name] = nil
+    end
+
     for name, event in pairs(events) do
         use(name, event.f, event.order, event.target)
     end
@@ -100,6 +108,7 @@ end
 
 Fonts = {
     game = "ZoFontGame",
+    h3 = "ZoFontHeader3"
 }
 
 Textures = {
