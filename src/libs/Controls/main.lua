@@ -11,6 +11,8 @@ ControlsRegistry = {}
 ---@alias AnchorSetting {point: any, target: any, relativePoint: any, offsetX: integer, offsetY: integer}
 ---@alias ColorSetting {r: number, g: number, b: number, a: number}
 
+---@alias OnMouseDoubleClick fun(self, button, ctrl, alt, shift, command)
+---@alias OnKeyDown fun(self, key, ctrl, alt, shift, command)
 ---@alias OnMouseDownFun fun(self, button, ctrl, alt, shift, command)
 ---@alias OnMouseUpFun fun(self, button, upInside, ctrl, alt, shift, command)
 

@@ -16,15 +16,16 @@
 ---@field copyEnabled Ref<boolean>
 ---@field newLineEnabled Ref<boolean>
 ---@field maxLength Ref<integer?>
----@field autoGrow Ref<boolean> # grows control height with text
----@field minHeight Ref<number?> # lower bound of the auto grown height
----@field maxHeight Ref<number?> # upper bound of the auto grown height, text scrolls past it
+---@field autoGrow Ref<boolean>
+---@field minHeight Ref<number?>
+---@field maxHeight Ref<number?>
 
 ---@class TextAreaHandlers : ControlHandlers
 ---@field onTextChanged Handlers<OnTextChangedFun>
 ---@field onEscape Handlers<OnInputFun>
 ---@field onFocusGained Handlers<OnInputFun>
 ---@field onFocusLost Handlers<OnInputFun>
+---@field onMouseDoubleClick Handlers<OnMouseDoubleClick>
 
 ---@class TextAreaChildren
 
@@ -46,6 +47,7 @@
 ---@field onEscape Ref<OnInputFun>|Events<OnInputFun>|nil
 ---@field onFocusGained Ref<OnInputFun>|Events<OnInputFun>|nil
 ---@field onFocusLost Ref<OnInputFun>|Events<OnInputFun>|nil
+---@field onMouseDoubleClick Ref<OnMouseDoubleClick>|Events<OnMouseDoubleClick>|nil
 
 ---@class TextAreaSlotsArgs
 
@@ -213,6 +215,7 @@ function Controls.textArea(id, parent, args)
     result.handlers.onEscape = MakeHandlers(args.events.onEscape, hook("OnEscape"))
     result.handlers.onFocusGained = MakeHandlers(args.events.onFocusGained, hook("OnFocusGained"))
     result.handlers.onFocusLost = MakeHandlers(args.events.onFocusLost, hook("OnFocusLost"))
+    result.handlers.onMouseDoubleClick = MakeHandlers(args.events.onMouseDoubleClick, hook("OnMouseDoubleClick"))
 
     local syncing = false
     e:SetHandler("OnTextChanged", function(self)

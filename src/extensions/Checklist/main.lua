@@ -3,8 +3,8 @@
 --* use /libs/Controls/basic/label.lua
 --* use /libs/Controls/basic/control.lua
 --* use /libs/Controls/basic/layout.lua
---* use /libs/Controls/basic/editBox.lua
 --* use /libs/Controls/composite/scrollArea.lua
+--* use /libs/Controls/composite/textArea.lua
 
 local clone = E.Utils.clone
 
@@ -83,9 +83,7 @@ end
 
 ---@param notes Ref<Note[]>
 ---@param note Note
----@param rows {item: Control, text: Label, delete: Label}[]
----@param index integer
-local function RemoveNote(notes, note, rows, index)
+local function RemoveNote(notes, note)
     local notesInner = notes:get()
     for i = 1, #notesInner do
         if notesInner[i].id == note.id then
@@ -93,12 +91,10 @@ local function RemoveNote(notes, note, rows, index)
             break
         end
     end
-    rows[index].item.params.hidden:set(true)
-    table.remove(rows, index)
     notes:set(notesInner)
 end
 
----@param panel {area: ScrollArea, rows: {item: Control, text: Label, delete: Label}[]}
+---@param panel {area: ScrollArea, rows: {item: Control, text: TextArea, delete: Label}[]}
 ---@param index integer
 local function CreateNoteRow(panel, index)
     local baseId = "E_CHECKLIST_PANEL_NOTE_ROW_" .. tostring(index)
@@ -120,7 +116,9 @@ local function CreateNoteRow(panel, index)
         params = {
             hidden = Ref(false),
             autoGrow = Ref(true),
-            maxHeight = Ref(100),
+            minHeight = Ref(26),
+            maxHeight = Ref(300),
+            maxLength = Ref(5000),
             anchors = Ref({
                 { point = TOPLEFT,  target = item.element, relativePoint = TOPLEFT,  offsetX = 26, offsetY = 0 },
                 { point = TOPRIGHT, target = item.element, relativePoint = TOPRIGHT, offsetX = 0,  offsetY = 0 }
@@ -130,6 +128,9 @@ local function CreateNoteRow(panel, index)
     text.params.height:use(baseId .. "-sync-height", function(_, v)
         item.params.height:set(v)
     end)
+    text.handlers.onMouseDoubleClick:add("EDIT", Ref(function()
+        text.params.editEnabled:set(true)
+    end))
     local delete = Controls.label(baseId .. "-delete", item, {
         params = {
             hidden = Ref(false),
@@ -147,10 +148,9 @@ local function CreateNoteRow(panel, index)
     }
 end
 
----@param panel {area: ScrollArea, rows: {item: Control, text: Label, delete: Label}[]}
+---@param panel {area: ScrollArea, rows: {item: Control, text: TextArea, delete: Label}[]}
 ---@param notes Ref<Note[]>
 local function RefreshNotes(panel, notes)
-    logger:info("refresh called, notes len = " .. tostring(#notes:get()))
     local previous = nil
     for i, note in ipairs(notes:get()) do
         local row = panel.rows[i]
@@ -160,10 +160,25 @@ local function RefreshNotes(panel, notes)
         end
         row.item.params.hidden:set(false)
         row.text.params.text:set(note.text)
+        row.text.handlers.onFocusLost:free("SAVE")
+        row.text.handlers.onFocusLost:add("SAVE", Ref(function()
+            row.text.params.editEnabled:set(false)
+            local notesInner = notes:get()
+            notesInner[i].text = row.text.params.text:get()
+            notes:set(notesInner)
+        end))
         row.delete.handlers.onMouseUp:free("DELETE_NOTE")
         row.delete.handlers.onMouseUp:add("DELETE_NOTE", Ref(function(_, button, upInside)
             if button == 1 and upInside then
-                RemoveNote(notes, note, panel.rows, i)
+                RemoveNote(notes, note)
+                local previousLocal = panel.rows[1]
+                for _, rowLocal in ipairs(panel.rows) do
+                    if rowLocal.item.params.hidden:get() then
+                        break
+                    end
+                    previousLocal = rowLocal
+                end
+                previousLocal.item.params.hidden:set(true)
                 RefreshNotes(panel, notes)
             end
         end))
@@ -182,7 +197,7 @@ end
 
 ---@param notes Ref<Note[]>
 ---@param counter Ref<integer>
----@return Layout, EditBox, {area: ScrollArea, rows: Element[]}
+---@return Layout, TextArea, {area: ScrollArea, rows: Element[]}
 local function CreatePanel(notes, counter)
     local layout = Controls.layout("E_CHECKLIST_PANEL", {
         params = {
@@ -202,24 +217,36 @@ local function CreatePanel(notes, counter)
             }),
         }
     })
-    local input = Controls.editBox("E_CHECKLIST_PANEL_INPUT", layout, {
+    local inputBackdrop = Controls.backdrop("E_CHECKLIST_PANEL_INPUT_BACKDROP", layout, {
         params = {
             hidden = Ref(false),
             width = Ref(495),
-            height = Ref(100),
-            font = Ref(Fonts.game),
-            defaultText = Ref("Some info to note..."),
-            loseFocusOnEnter = Ref(false),
-            multiLine = Ref(true),
-            mouseEnabled = Ref(true),
             anchors = Ref({
                 { point = TOPLEFT, target = title.element, relativePoint = BOTTOMLEFT, offsetX = 0, offsetY = 0 },
             }),
         }
     })
+    local input = Controls.textArea("E_CHECKLIST_PANEL_INPUT", inputBackdrop, {
+        params = {
+            hidden = Ref(false),
+            width = inputBackdrop.params.width,
+            autoGrow = Ref(true),
+            minHeight = Ref(100),
+            maxHeight = Ref(300),
+            editEnabled = Ref(true),
+            defaultText = Ref("Some info to note..."),
+            maxLength = Ref(5000),
+            anchors = Ref({
+                { point = TOPLEFT, target = inputBackdrop.element, relativePoint = TOPLEFT, offsetX = 0, offsetY = 0 },
+            })
+        }
+    })
     input.handlers.onMouseUp:add("E_CHECKLIST_PANEL_INPUT_CLICK", Ref(function()
         input.element:TakeFocus()
     end))
+    input.params.height:use("E_CHECKLIST_PANEL_INPUT_HEIGHT_SYNC", function(_, v)
+        inputBackdrop.params.height:set(v)
+    end)
     local submit = Controls.label("E_CHECKLIST_PANEL_SUBMIT", layout, {
         params = {
             hidden = Ref(false),
